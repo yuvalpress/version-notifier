@@ -1,5 +1,5 @@
 # Version Notifier
-**Version Notifier** - your Friendly Neighborhood Spiderman, only geeker :eyeglasses:
+🕷 **Version Notifier** - your Friendly Neighborhood Spiderman, only geeker 🤓
 
 Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
 By using it, you'll be notified for any new global repository release you choose to be notified about.
