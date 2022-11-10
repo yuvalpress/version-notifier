@@ -38,7 +38,7 @@ If the deployment was successful, you'll see the logs rolling out of your contai
 #### Using Docker:
 If you executed Version Notifier using Docker, you'll see the logs roll after you run the container.
 ![Docker Run](./docs/docker.gif)
-#### Watch logs in kubernetes:
+#### Watch logs with kubernetes:
 ```shell
 pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[0].metadata.name') && kubectl logs $pod -n notifier -f
 ```
