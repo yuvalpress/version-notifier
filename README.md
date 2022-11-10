@@ -2,9 +2,9 @@
 🕷 **Version Notifier** - your Friendly Neighborhood Spiderman, only geeker 🤓
 
 Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
-</br>By using it, you'll be notified for any new global repository release you choose to be notified about.
+</br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack channel.</br></br>
 
-### Getting Started
+### Getting Started 🏁
 You can deploy the application in one of two ways:
 * **HELM**
 </br> Download the latest release and deploy it to your Kubernetes cluster </br>
@@ -33,7 +33,16 @@ You can deploy the application in one of two ways:
     docker run --name {{ value }}
     ```
 
-### Verification of Success
+### Configuration Options 🕹
+`NOTIFY` - List represented as string with the following possible keywords: `major, minor, patch, all`
+</br></br> Possible combinations:
+* "all" - `all` must be set alone
+* "major, patch" - only notify for `major` and `patch` version changes
+* "minor" - only notify about `minor` version changes
+
+If not set, NOTIFY will be automatically set to `all`</br></br>
+
+### Verification of Success 🎯
 If the deployment was successful, you'll see the logs rolling out of your container: </br></br>
 #### Using Docker:
 If you executed Version Notifier using Docker, you'll see the logs roll after you run the container.
@@ -42,12 +51,3 @@ If you executed Version Notifier using Docker, you'll see the logs roll after yo
 ```shell
 pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[0].metadata.name') && kubectl logs $pod -n notifier -f
 ```
-
-### Configuration Options
-`NOTIFY` - List represented as string with the following possible keywords: `major, minor, patch, all`
-</br></br> Possible combinations:
-* "all" - `all` must be set alone
-* "major, patch" - only notify for `major` and `patch` version changes
-* "minor" - only notify about `minor` version changes
-
-If not set, NOTIFY will be automatically set to `all`
