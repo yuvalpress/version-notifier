@@ -2,7 +2,7 @@
 🕷 **Version Notifier** - your Friendly Neighborhood Spiderman, only geeker 🤓
 
 Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
-By using it, you'll be notified for any new global repository release you choose to be notified about.
+</br>By using it, you'll be notified for any new global repository release you choose to be notified about.
 
 ### Getting Started
 You can deploy the application in one of two ways:
