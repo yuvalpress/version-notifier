@@ -1,0 +1,52 @@
+application:
+  notify: "major, patch"
+
+deployment:
+  metadata:
+    labels: {}
+    annotations: {}
+
+  spec:
+    replicas: 1
+
+    template:
+      metadata:
+        labels: {}
+
+      image:
+        image: yuvalpress/version-notifier
+        tag: latest
+        imagePullPolicy: IfNotPresent
+
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "100m"
+        limits:
+          memory: "128Mi"
+          cpu: "250"
+
+# not recommended to enable the secret as the values need to be hard coded in the chart
+secret:
+  enable: enable
+  name: version-notifier-secret
+  values: # only if enabled
+    SLACK_TOKEN: eG94Yi0yODg1NjM2NDYyLTQzNjg1NDMzMjQ4NDgtTHJmYmRvYzM0TFh2Z0g4WEhtYVM0Q29G
+    SLACK_CHANNEL: QzA0OU5CRzRUUEc=
+
+# the repos to scrape
+configmap:
+  repos:
+    - confluentinc: terraform-provider-confluent
+    - hashicorp: terraform-provider-aws
+    - hashicorp: terraform-provider-google
+    - datadog: datadog-agent
+    - MuhammedKalkan: OpenLens
+    - helm: helm
+    - helm: chartmuseum
+    - kubernetes: kubernetes
+    - kubernetes: kubectl
+    - golang: go
+    - cloudflare: cloudflared
+    - open-metadata: openmetadata-helm-charts
+

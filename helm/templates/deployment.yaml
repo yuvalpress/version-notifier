@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+  {{ if .Values.deployment.metadata.labels }}
+  {{- range $k, $v := .Values.deployment.metadata.labels }}
+    {{ $k }}: {{ $v }}
+  {{- end }}
+  {{ end }}
+  annotations:
+  {{ if .Values.deployment.metadata.annotations }}
+  {{- range $k, $v := .Values.deployment.metadata.annotations }}
+    {{ $k }}: {{ $v }}
+  {{- end }}
+  {{ end }}
+spec:
+  replicas: {{ .Values.deployment.spec.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+      {{ if .Values.deployment.spec.template.metadata.labels }}
+      {{- range $k, $v := .Values.deployment.spec.template.metadata.labels }}
+        {{ $k }}: {{ $v }}
+      {{- end }}
+      {{ end }}
+    spec:
+      containers:
+        - name: version-notifier
+          image: {{ .Values.deployment.spec.template.image.image }}:{{ .Values.deployment.spec.template.image.tag }}
+          imagePullPolicy: {{ .Values.deployment.spec.template.image.imagePullPolicy }}
+          resources:
+            requests:
+              memory: {{ .Values.deployment.spec.template.resources.requests.memory }}
+              cpu: {{ .Values.deployment.spec.template.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.deployment.spec.template.resources.limits.memory }}
+              cpu: {{ .Values.deployment.spec.template.resources.limits.cpu }}
+          {{ if .Values.application.notify }}
+          env:
+            - name: {{ upper "notify" }}
+              value: {{ .Values.application.notify }}
+          {{ end }}
+          envFrom:
+            - secretRef:
+                {{- if .Values.secret.name }}
+                  name: {{ .Values.secret.name }}
+                {{- else }}
+                  name: {{ .Release.Name }}-secret
+                {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: "/app/config.yaml"
+              subPath: config.yaml
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-cm
+            items:
+              - key: "config.yaml"
+                path: "config.yaml"
