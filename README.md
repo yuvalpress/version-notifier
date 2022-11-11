@@ -1,53 +1,20 @@
-# Version Notifier
-🕷 **Version Notifier** - your Friendly Neighborhood Spiderman, only geeker 🤓
+## Usage
 
-Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
-</br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack channel.</br></br>
+[Helm](https://helm.sh) must be installed to use the charts.  Please refer to
+Helm's [documentation](https://helm.sh/docs) to get started.
 
-### Getting Started 🏁
-You can deploy the application in one of two ways:
-* **HELM**
-</br> Download the latest release and deploy it to your Kubernetes cluster </br>
-    ```shell
-    
-    ```
+Once Helm has been set up correctly, add the repo as follows:
 
-* **Docker Image**
-</br> Create a dockerfile from the Version-Notifier base image and deploy it in as a standalone container:
-    ```dockerfile
-    # Name this file Dockerfile
-    FROM yuvalpress/version-notifier:latest
-    
-    # You MUST Set this environment variables for the application to send notification to slack
-    ENV SLACK_CHANNEL {{ value }}
-    ENV SLACK_TOKEN {{ value }}
-    
-    # Optional
-    ENV NOTIFY {{ value }}
-    ```
-  
-    Build and Deploy:
-    ```shell
-    # Run this command from the Dockerfile dir
-    docker build -t {{ value }} .
-    docker run --name {{ value }}
-    ```
+  helm repo add vnotifier https://yuvalpress.github.io/helm-charts
 
-### Configuration Options 🕹
-`NOTIFY` - List represented as string with the following possible keywords: `major, minor, patch, all`
-</br></br> Possible combinations:
-* "all" - `all` must be set alone
-* "major, patch" - only notify for `major` and `patch` version changes
-* "minor" - only notify about `minor` version changes
+If you had already added this repo earlier, run `helm repo update` to retrieve
+the latest versions of the packages.  You can then run `helm search repo
+<alias>` to see the charts.
 
-If not set, NOTIFY will be automatically set to `all`</br></br>
+To install the <chart-name> chart:
 
-### Verification of Success 🎯
-If the deployment was successful, you'll see the logs rolling out of your container: </br></br>
-#### Using Docker:
-If you executed Version Notifier using Docker, you'll see the logs roll after you run the container.
-![Docker Run](./docs/docker.gif)
-#### Watch logs with kubernetes:
-```shell
-pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[0].metadata.name') && kubectl logs $pod -n notifier -f
-```
+    helm install my-<chart-name> <alias>/<chart-name>
+
+To uninstall the chart:
+
+    helm delete my-<chart-name>
