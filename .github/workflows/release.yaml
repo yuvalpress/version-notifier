@@ -66,9 +66,10 @@ jobs:
 
   bump-version:
     runs-on: ubuntu-latest
+    needs: chart-test
     # needs: check-commiter
     outputs:
-      newVer: ${{ steps.get_version.outputs.newVer }}
+      newVer: ${{ steps.new_helm_version.outputs.new_version }}
     # if: needs.check-commiter.outputs.isBot == 'false'
     steps:
       - name: Checkout
@@ -105,10 +106,6 @@ jobs:
         with:
           current_version: ${{ steps.helm_version.outputs.helmVer }}
           level: ${{ steps.set_level.outputs.level }}
-
-      - name: Edit version attributes of the helm chart  
-        run: |
-          yq -i '.version = "${{ steps.new_helm_version.outputs.new_version }}"' charts/version-notifier/Chart.yaml
 
       # - name: Get Latest Tag
       #   id: previous_tag
@@ -196,7 +193,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Edit version attributes of the helm chart
+      - name: Edit version attributes of the helm chart  
         run: |
           yq -i '.version = "${{ needs.bump-version.outputs.newVer }}"' charts/version-notifier/Chart.yaml
 
