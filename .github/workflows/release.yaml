@@ -49,25 +49,54 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: ct install
 
-  release:
+  check-commiter:
     runs-on: ubuntu-latest
+    outputs:
+      isBot: ${{ steps.is_bot.outputs.skip }}
     needs: chart-test
     steps:
+      - name: Check for Bot Commiter
+        id: is_bot
+        run: |
+          if [[ ${{ github.event.head_commit.message }} == *"Bot"* ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+
+  bump-version:
+    runs-on: ubuntu-latest
+    needs: check-commiter
+    outputs:
+      newVer: ${{ steps.new_helm_version.outputs.new_version }}
+    if: needs.check-commiter.outputs.isBot == 'false'
+    steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@gmail.com"
 
       - name: Get Latest Tag
         id: previous_tag
         uses: WyriHaximus/github-action-get-previous-tag@v1
 
-      
+      - name: Remove Dots From Latest Tag
+        id: previous_tag_no_dots
+        uses: mad9000/actions-find-and-replace-string@3
+        with:
+            source: ${{ steps.previous_tag.outputs.tag }}
+            find: '.'      
+            replace: ''
+            replaceAll: 'true'
+
+      - name: Turn Helm Version To Timestamp Format
+        id: previous_tag_to_timestamp
+        uses: mad9000/actions-find-and-replace-string@3
+        with:
+            source: ${{ steps.previous_tag_no_dots.outputs.value }}
+            find: '.'      
+            replace: ''
+            replaceAll: 'true'
+
       - name: Configure yq
         uses: mikefarah/yq@v4.30.1
 
@@ -78,28 +107,37 @@ jobs:
 
       - name: Turn Helm Version To Timestamp Format
         id: helm_version_timestamp
-        uses: mad9000/actions-find-and-replace-string@2
+        uses: mad9000/actions-find-and-replace-string@3
         with:
             source: ${{ steps.helm_version.outputs.helmVer }}
             find: '.'      
             replace: ''
+            replaceAll: 'true'
 
       - name: test
         run: |
-          echo "${{ steps.helm_version_timestamp.outputs.value }} ${{ steps.previous_tag.outputs.timestamp }}"
+          echo ${{ steps.previous_tag_to_timestamp.outputs.value }} ${{ steps.helm_version_timestamp.outputs.value }}
 
       - name: Bump Version
         uses: actions-ecosystem/action-bump-semver@v1
         id: new_helm_version
-        if: steps.previous_tag.outputs.timestamp > steps.helm_version_timestamp.outputs.value
+        if: steps.previous_tag_to_timestamp.outputs.value > steps.helm_version_timestamp.outputs.value
         with:
           current_version: ${{ steps.helm_version.outputs.helmVer }}
           level: patch
 
+  release:
+    runs-on: ubuntu-latest
+    needs: bump-version
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Edit version attributes of the helm chart
-        if: steps.previous_tag.outputs.timestamp > steps.helm_version_timestamp.outputs.value
         run: |
-          yq -i '.version = "${{ steps.new_helm_version.outputs.new_version }}"' charts/version-notifier/Chart.yaml
+          yq -i '.version = "${{ needs.bump-version.outputs.newVer }}"' charts/version-notifier/Chart.yaml
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.0
@@ -117,3 +155,18 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
+
+  release-on-bot:
+    runs-on: ubuntu-latest
+    needs: check-commiter
+    if: needs.check-commiter.outputs.isBot == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
