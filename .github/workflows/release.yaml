@@ -121,14 +121,14 @@ jobs:
 
       - name: Parse semver string
         id: semver_parser 
-        if: steps.previous_tag_to_timestamp.outputs.value > steps.helm_version_timestamp.outputs.value
+        if: steps.previous_tag_to_timestamp.outputs.value >= steps.helm_version_timestamp.outputs.value
         uses: booxmedialtd/ws-action-parse-semver@v1
         with:
           input_string: ${{ steps.helm_version.outputs.helmVer }}
 
       - name: Set Level
         id: set_level
-        if: steps.previous_tag_to_timestamp.outputs.value > steps.helm_version_timestamp.outputs.value
+        if: steps.previous_tag_to_timestamp.outputs.value >= steps.helm_version_timestamp.outputs.value
         run: |
           if [ $((${{ steps.semver_parser.outputs.patch }})) -lt $((9)) ]; then
             echo "level=patch" >> $GITHUB_OUTPUT
@@ -139,7 +139,7 @@ jobs:
       - name: Bump Version
         uses: actions-ecosystem/action-bump-semver@v1
         id: new_helm_version
-        if: steps.previous_tag_to_timestamp.outputs.value > steps.helm_version_timestamp.outputs.value
+        if: steps.previous_tag_to_timestamp.outputs.value >= steps.helm_version_timestamp.outputs.value
         with:
           current_version: ${{ steps.helm_version.outputs.helmVer }}
           level: ${{ steps.set_level.outputs.level }}
