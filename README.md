@@ -86,7 +86,7 @@ If you executed Version Notifier using Docker, you'll see the logs roll after yo
 pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[0].metadata.name') && kubectl logs $pod -n notifier -f
 ```
 <br></br>
-## Upcoming Features
+## Upcoming Features ✨
 * Analyzing tags of Helm Charts released using the `helm/chart-releaser-action` GitHub Action.
 * Support for more notification methods (currently Slack only). 
 
@@ -94,7 +94,7 @@ pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[
 ## Want to contribute? 💻
 PR's are more than welcome!
 
-### Steps:
+#### Steps:
 1. Open a branch in the following form: `feature/<feature_name>`.
 2. Make sure to bump the Docker Image version by incrementing the version inside the docker.version file.
 3. Open PR!
