@@ -16,7 +16,7 @@ deployment:
       image:
         image: yuvalpress/version-notifier
         # tag: latest # if not set, will default to the chart's appVersion
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
 
       resources:
         requests:
