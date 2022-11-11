@@ -9,26 +9,33 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Set up QEMU
+
+      - uses: paulhatch/semantic-version@v4.0.2
+        name: bump-version
+        with:
+          tag_prefix: "v"
+          major_pattern: "(docker-major)"
+          minor_pattern: "(docker-major)"
+          change_path: "versions/docker"
+      
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
+      
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Login to Docker Hub
+      
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
+      
+      - name: Build and push
         uses: docker/build-push-action@v3
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64, linux/386, darwin/arm64, darwin/amd64, windows/amd64
           push: true
           tags: yuvalpress/version-notifier:latest, yuvalpress/version-notifier:${{ github.run_number }}
