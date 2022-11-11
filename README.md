@@ -4,7 +4,7 @@
 Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
 </br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack channel.</br></br>
 
-### Getting Started 🏁
+## Getting Started 🏁
 You can deploy the application in one of two ways:
 * **HELM**
 </br> Download the latest release and deploy it to your Kubernetes cluster </br>
@@ -33,7 +33,7 @@ You can deploy the application in one of two ways:
     docker run --name {{ value }}
     ```
 
-### Configuration Options 🕹
+## Configuration Options 🕹
 `NOTIFY` - List represented as string with the following possible keywords: `major, minor, patch, all`
 </br></br> Possible combinations:
 * "all" - `all` must be set alone
@@ -42,7 +42,8 @@ You can deploy the application in one of two ways:
 
 If not set, NOTIFY will be automatically set to `all`</br></br>
 
-### Verification of Success 🎯
+
+## Verification of Success 🎯
 If the deployment was successful, you'll see the logs rolling out of your container: </br></br>
 #### Using Docker:
 If you executed Version Notifier using Docker, you'll see the logs roll after you run the container.

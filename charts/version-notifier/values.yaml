@@ -16,7 +16,7 @@ deployment:
       image:
         image: yuvalpress/version-notifier
         tag: latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
 
       resources:
         requests:
