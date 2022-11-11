@@ -31,4 +31,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: yuvalpress/version-notifier:latest
+          tags: yuvalpress/version-notifier:latest, yuvalpress/version-notifier:${{ github.run_number }}
