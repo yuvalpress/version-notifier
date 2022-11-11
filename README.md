@@ -5,7 +5,7 @@ Version Notifier is a modern solution for the "being notified" aspect of each Te
 </br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack channel.</br></br>
 
 ## Getting Started 🏁
-You can deploy the application in one of two ways:</br></br>
+You can deploy the application in one of two ways:</br>
 ### HELM
 Download the latest release and deploy it to your Kubernetes cluster </br>
   ```shell
@@ -39,7 +39,7 @@ Create a dockerfile from the Version-Notifier base image and deploy it as a stan
 ## Configuration Options 🕹
 ### NOTIFY
 List represented as string with the following possible keywords: `major, minor, patch, all`
-</br>This value can be set in the both HELM values.yaml file under `application.notify` and as environment variable in your custom Dockerfile.
+</br>This value can be set in both HELM values.yaml file under `application.notify` and as environment variable in your custom Dockerfile.
 </br></br> Possible combinations:
   * "all" - `all` must be set alone
   * "major, patch" - only notify for `major` and `patch` version changes
@@ -74,23 +74,23 @@ repos:
     ENV SLACK_CHANNEL {{ value }}
     ENV SLACK_TOKEN {{ value }}
   ```
-#### Configure 
 
 ## Verification of Success 🎯
 If the deployment was successful, you'll see the logs rolling out of your container:
 ### Using Docker
-If you executed Version Notifier using Docker, you'll see the logs roll after you run the container.
+If you executed Version Notifier using Docker, you'll see the logs roll after you run the container.</br></br>
 ![Docker Run](./docs/docker.gif)
 
 ### Watch logs with kubernetes
 ```shell
 pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[0].metadata.name') && kubectl logs $pod -n notifier -f
 ```
-
+<br></br>
 ## Upcoming Features
 * Analyzing tags of Helm Charts released using the `helm/chart-releaser-action` GitHub Action.
 * Support for more notification methods (currently Slack only). 
 
+<br></br>
 ## Want to contribute? 💻
 PR's are more than welcome!
 
