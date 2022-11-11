@@ -81,7 +81,10 @@ jobs:
             source: ${{ steps.helm_version.outputs.helmVer }}
             find: '.'      
             replace: ''
-            replaceAll: "true"            
+
+      - name: test
+        run: |
+          echo "${{ steps.helm_version_timestamp.outputs.value }} ${{ steps.previous_tag.outputs.timestamp }}"
 
       - uses: actions-ecosystem/action-bump-semver@v1
         id: new_helm_version
@@ -90,7 +93,8 @@ jobs:
           current_version: ${{ steps.helm_version.outputs.helmVer }}
           level: patch
 
-      - name: Edit version attributes of the helm chart  
+      - name: Edit version attributes of the helm chart
+        if: steps.previous_tag.outputs.timestamp > steps.helm_version_timestamp.outputs.value
         run: |
           yq -i '.version = "${{ steps.new_helm_version.outputs.new_version }}"' charts/version-notifier/Chart.yaml
 
