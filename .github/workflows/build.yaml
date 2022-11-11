@@ -40,4 +40,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: yuvalpress/version-notifier:latest, yuvalpress/version-notifier:${{ steps.package.outputs.content }}
+          tags: yuvalpress/version-notifier:latest, yuvalpress/version-notifier:${{ steps.get_version.outputs.content }}
