@@ -18,7 +18,7 @@ jobs:
 
       - name: Read version
         uses: juliangruber/read-file-action@v1
-        id: get_version
+        id: docker_version
         with:
           path: versions/docker
       
@@ -40,4 +40,31 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: yuvalpress/version-notifier:latest, yuvalpress/version-notifier:${{ steps.get_version.outputs.content }}
+          tags: yuvalpress/version-notifier:latest, yuvalpress/version-notifier:${{ steps.docker_version.outputs.content }}
+
+      - name: Read version
+        uses: juliangruber/read-file-action@v1
+        id: helm_version
+        with:
+          path: versions/docker
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+        run: |
+          pip3 install --upgrade bumpversion
+          bumpversion --current-version {{ steps.helm_version.outputs.content }} minor version/helm
+
+      - name: Bump helm version
+        uses: mikefarah/yq@v4.30.1
+        run: |
+          yq -i '.appVersion' = {{ steps.docker_version.outputs.content }} charts/version-notifier/Chart.yaml
+
+
+      - name: Commit To Helm Chart
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@gmail.com"
+          git commit -am "Automated Helm Chart Bump"
+          git push
