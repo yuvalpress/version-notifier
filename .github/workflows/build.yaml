@@ -7,6 +7,7 @@ on:
     paths:
       - src/**
       - Dockerfile
+      - versions/docker
 
 jobs:
   docker:
@@ -15,13 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - uses: paulhatch/semantic-version@v4.0.2
-        name: bump-version
+      - name: Read version
+        uses: juliangruber/read-file-action@v1
+        id: get_version
         with:
-          tag_prefix: "v"
-          major_pattern: "(docker-major)"
-          minor_pattern: "(docker-major)"
-          change_path: "versions/docker"
+          path: ./package.json
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -41,4 +40,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: yuvalpress/version-notifier:latest, yuvalpress/version-notifier:${{ github.run_number }}
+          tags: yuvalpress/version-notifier:latest, yuvalpress/version-notifier:${{ steps.package.outputs.content }}
