@@ -20,7 +20,7 @@ jobs:
         uses: juliangruber/read-file-action@v1
         id: get_version
         with:
-          path: ./package.json
+          path: versions/docker
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
