@@ -40,13 +40,9 @@ configmap:
     - confluentinc: terraform-provider-confluent
     - hashicorp: terraform-provider-aws
     - hashicorp: terraform-provider-google
-    - datadog: datadog-agent
     - MuhammedKalkan: OpenLens
     - helm: helm
     - helm: chartmuseum
     - kubernetes: kubernetes
     - kubernetes: kubectl
-    - golang: go
-    - cloudflare: cloudflared
-    - open-metadata: openmetadata-helm-charts
 
