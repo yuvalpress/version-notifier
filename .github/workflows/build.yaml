@@ -107,7 +107,6 @@ jobs:
       - name: Edit version attributes of the helm chart  
         run: |
           yq -i '.appVersion = "${{ needs.docker.outputs.docker_version }}"' charts/version-notifier/Chart.yaml
-          yq -i '.version = "${{ steps.new_helm_version.outputs.new_version }}"' charts/version-notifier/Chart.yaml
 
       - name: Commit Helm Chart
         run: |
