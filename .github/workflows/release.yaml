@@ -30,14 +30,24 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.3.1
 
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "::set-output name=changed::true"
+          fi
+
       - name: Run chart-testing (lint)
         run: ct lint --target-branch ${{ github.event.repository.default_branch }}
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.4.0
+        if: steps.list-changed.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
-        run: ct install --charts charts/version-notifier
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct install
 
   release:
     runs-on: ubuntu-latest
