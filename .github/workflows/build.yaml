@@ -23,7 +23,8 @@ jobs:
         id: verify-changed-files
         with:
           files: |
-             docker.version
+            *
+            docker.version
 
       - name: test
         run: echo ${{ steps.verify-changed-files.outputs.changed_files }}
