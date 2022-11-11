@@ -221,7 +221,7 @@ func main() {
 	// initialize application data until successful
 	log.Println("Starting application...")
 
-	log.Println("Initializing latest tags for every configurecd new	 repo")
+	log.Println("Initializing latest tags for configured repositories")
 	for !anchor.init() {
 		log.Printf("Failed to initialize application because of some bad requests...trying again.")
 		time.Sleep(5 * time.Second)

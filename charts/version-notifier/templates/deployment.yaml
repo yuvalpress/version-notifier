@@ -32,7 +32,11 @@ spec:
     spec:
       containers:
         - name: version-notifier
+          {{ if .Values.deployment.spec.template.image.tag }}
           image: {{ .Values.deployment.spec.template.image.image }}:{{ .Values.deployment.spec.template.image.tag }}
+          {{ else }}
+          image: {{ .Values.deployment.spec.template.image.image }}:{{ .Chart.AppVersion }}
+          {{ end }}
           imagePullPolicy: {{ .Values.deployment.spec.template.image.imagePullPolicy }}
           resources:
             requests:
