@@ -35,7 +35,7 @@ jobs:
     outputs:
       docker_version: ${{ steps.docker_version.outputs.content }}
     needs: validate-bump
-    if: needs.validate-bump.outputs.bumped == "true"
+    if: needs.validate-bump.outputs.bumped == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
