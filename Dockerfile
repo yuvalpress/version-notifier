@@ -7,4 +7,5 @@ COPY ./src ./
 RUN go mod download
 RUN go build -o /version-notifier
 
+# test
 CMD [ "/version-notifier" ]
