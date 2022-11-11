@@ -79,7 +79,9 @@ repos:
 If the deployment was successful, you'll see the logs rolling out of your container:
 ### Using Docker
 If you executed Version Notifier using Docker, you'll see the logs roll after you run the container.</br></br>
-![Docker Run](docs/docker-run.mp4)
+<video src="docs/docker-run.mp4" controls="controls" style="max-width: 730px;">
+</video>
+<!-- ![Docker Run](docs/docker-run.mp4) -->
 
 ### Watch logs with kubernetes
 ```shell
