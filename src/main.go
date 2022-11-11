@@ -22,10 +22,14 @@ import (
 var (
 	anchor Anchor
 
-	// Reset, Green and Red are variable colors for logs ourputs
+	// Reset color variables after call
 	Reset = "\033[0m"
+
+	// Green color for logs
 	Green = "\033[32m"
-	Red   = "\033[31m"
+
+	// Red color for logs
+	Red = "\033[31m"
 )
 
 // Anchor holds the first initialized information for the service
@@ -41,6 +45,7 @@ type Latest struct {
 	URL    string
 }
 
+// Conf struct holds all the repositories to configure
 type Conf struct {
 	Repos []map[string]string
 }
@@ -139,9 +144,9 @@ func doesNewTagExist(old, new string, repo string) (bool, string) {
 
 		if oldVer.LessThan(newVer) {
 			return true, newVer.String()
-		} else {
-			return false, ""
 		}
+
+		return false, ""
 	}
 
 	log.Printf(Red+"The version for package: %v is not formatted in Semantic Versioning format"+Reset, repo)

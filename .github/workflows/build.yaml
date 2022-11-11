@@ -7,11 +7,35 @@ on:
     paths:
       - src/**
       - Dockerfile
-      - versions/docker
+      - docker.version
 
 jobs:
+  validate-bump:
+    runs-on: ubuntu-latest
+    outputs:
+      bumped: ${{ steps.verify-changed-files.outputs.changed_files }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Verify Version file Changed
+        uses: tj-actions/verify-changed-files@v12
+        id: verify-changed-files
+        with:
+          files: |
+             docker.version
+
+      - name: Perform action when test_directory changes
+        if: contains(steps.verify-changed-files.outputs.changed_files, 'docker.version')
+        run: |
+          echo "bumped=true" >> $GITHUB_OUTPUT
+
   docker:
     runs-on: ubuntu-latest
+    outputs:
+      docker_version: ${{ steps.docker_version.outputs.content }}
+    needs: validate-bump
+    if: needs.validate-bump.outputs.bumped == "true"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -22,7 +46,7 @@ jobs:
         uses: juliangruber/read-file-action@v1
         id: docker_version
         with:
-          path: versions/docker
+          path: docker.version
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -44,6 +68,10 @@ jobs:
           push: true
           tags: yuvalpress/version-notifier:latest, yuvalpress/version-notifier:${{ steps.docker_version.outputs.content }}
 
+  helm-update:
+    runs-on: ubuntu-latest
+    needs: docker
+    steps:
       - name: Configure yq
         uses: mikefarah/yq@v4.30.1
 
@@ -60,7 +88,7 @@ jobs:
 
       - name: Edit version attributes of the helm chart  
         run: |
-          yq -i '.appVersion = "${{ steps.docker_version.outputs.content }}"' charts/version-notifier/Chart.yaml
+          yq -i '.appVersion = "${{ needs.docker.outputs.docker_version }}"' charts/version-notifier/Chart.yaml
           yq -i '.version = "${{ steps.new_helm_version.outputs.new_version }}"' charts/version-notifier/Chart.yaml
 
       - name: Commit Helm Chart

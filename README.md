@@ -6,13 +6,13 @@ Version Notifier is a modern solution for the "being notified" aspect of each Te
 
 ## Getting Started 🏁
 You can deploy the application in one of two ways:
-  * **HELM**
+* **HELM**
 </br> Download the latest release and deploy it to your Kubernetes cluster </br>
   ```shell
     
   ```
 
-  * **Docker Image**
+* **Docker Image**
 </br> Create a dockerfile from the Version-Notifier base image and deploy it in as a standalone container:
   ```dockerfile
     # Name this file Dockerfile
