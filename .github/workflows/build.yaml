@@ -64,9 +64,14 @@ jobs:
           yq -i '.version = "${{ steps.new_helm_version.outputs.new_version }}"' charts/version-notifier/Chart.yaml
 
 
-      - name: Commit To Helm Chart
+      - name: Commit Helm Chart
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@gmail.com"
-          git commit -am "Automated Helm Chart Bump"
-          git push
+          git commit -am "Bot: Automated Helm Chart Bump"
+
+      - name: Push Changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.REPO_TOKEN }}
+          branch: main
