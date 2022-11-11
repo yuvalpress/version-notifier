@@ -6,15 +6,15 @@ Version Notifier is a modern solution for the "being notified" aspect of each Te
 
 ## Getting Started 🏁
 You can deploy the application in one of two ways:
-* **HELM**
+  * **HELM**
 </br> Download the latest release and deploy it to your Kubernetes cluster </br>
-    ```shell
+  ```shell
     
-    ```
+  ```
 
-* **Docker Image**
+  * **Docker Image**
 </br> Create a dockerfile from the Version-Notifier base image and deploy it in as a standalone container:
-    ```dockerfile
+  ```dockerfile
     # Name this file Dockerfile
     FROM yuvalpress/version-notifier:latest
     
@@ -24,31 +24,30 @@ You can deploy the application in one of two ways:
     
     # Optional
     ENV NOTIFY {{ value }}
-    ```
+  ```
   
-    Build and Deploy:
-    ```shell
+  Build and Deploy:
+  ```shell
     # Run this command from the Dockerfile dir
     docker build -t {{ value }} .
     docker run --name {{ value }}
-    ```
+  ```
 
 ## Configuration Options 🕹
 `NOTIFY` - List represented as string with the following possible keywords: `major, minor, patch, all`
 </br></br> Possible combinations:
-* "all" - `all` must be set alone
-* "major, patch" - only notify for `major` and `patch` version changes
-* "minor" - only notify about `minor` version changes
+  * "all" - `all` must be set alone
+  * "major, patch" - only notify for `major` and `patch` version changes
+  * "minor" - only notify about `minor` version changes
 
 If not set, NOTIFY will be automatically set to `all`</br></br>
 
-
 ## Verification of Success 🎯
 If the deployment was successful, you'll see the logs rolling out of your container: </br></br>
-#### Using Docker:
+### Using Docker
 If you executed Version Notifier using Docker, you'll see the logs roll after you run the container.
 ![Docker Run](./docs/docker.gif)
-#### Watch logs with kubernetes:
+### Watch logs with kubernetes
 ```shell
 pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[0].metadata.name') && kubectl logs $pod -n notifier -f
 ```

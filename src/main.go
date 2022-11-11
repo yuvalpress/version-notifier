@@ -1,3 +1,4 @@
+// version-notifier main
 package main
 
 import (
@@ -20,20 +21,24 @@ import (
 
 var (
 	anchor Anchor
-	Reset  = "\033[0m"
-	Green  = "\033[32m"
-	Red    = "\033[31m"
+
+	// Reset, Green and Red are variable colors for logs ourputs
+	Reset = "\033[0m"
+	Green = "\033[32m"
+	Red   = "\033[31m"
 )
 
+// Anchor holds the first initialized information for the service
 type Anchor struct {
 	repoList []Latest
 }
 
+// Latest holds all the needed information for a repo instance
 type Latest struct {
 	User   string
 	Repo   string
 	Latest string
-	Url    string
+	URL    string
 }
 
 type Conf struct {
@@ -56,13 +61,13 @@ func (a *Anchor) init() bool {
 
 			if len(data) == 0 {
 				return false
-			} else {
-				a.repoList = append(a.repoList, Latest{
-					User:   username,
-					Repo:   repoName,
-					Latest: getLatestTag(data[0]),
-					Url:    data[0].Path("link.-href").String()})
 			}
+
+			a.repoList = append(a.repoList, Latest{
+				User:   username,
+				Repo:   repoName,
+				Latest: getLatestTag(data[0]),
+				URL:    data[0].Path("link.-href").String()})
 		}
 	}
 
@@ -94,15 +99,15 @@ func levelsToNotify() []string {
 	return strings.Split(levels, ",")
 }
 
-// getUrl build the github url with the needed user and repo
-func getUrl(username, repoName string) string {
+// getURL build the github url with the needed user and repo
+func getURL(username, repoName string) string {
 	return "https://github.com/" + username + "/" + repoName + "/tags.atom"
 }
 
 // getLatestTag receives the latest ID (tag) available in the .atom file
 func getLatestTag(data *jparser.Container) string {
-	tagId := strings.Split(data.Path("id").String(), "/")
-	ver := strings.ReplaceAll(tagId[len(tagId)-1], "\"", "")
+	tagID := strings.Split(data.Path("id").String(), "/")
+	ver := strings.ReplaceAll(tagID[len(tagID)-1], "\"", "")
 
 	return ver
 }
@@ -162,7 +167,7 @@ func readConfigFile() (Conf, error) {
 
 // download is responsible to fetch the latest data from the relative url
 func download(username, repoName string) ([]*jparser.Container, error) {
-	url := getUrl(username, repoName)
+	url := getURL(username, repoName)
 	log.Println("Fetching latest tags from:", url)
 
 	// perform the request
@@ -245,14 +250,14 @@ func main() {
 				if result {
 					// update data
 					anchor.repoList[index].Latest = newVer
-					anchor.repoList[index].Url = latest[0].Path("link.-href").String()
+					anchor.repoList[index].URL = latest[0].Path("link.-href").String()
 
 					if stringInSlice(getUpdateLevel(repoData.Latest, newVer), levels) {
 						log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,
 							getUpdateLevel(repoData.Latest, newVer), repoData.User, repoData.Repo, newVer)
 
 						// notify slack channel
-						notify(repoData.User, repoData.Repo, anchor.repoList[index].Url, repoData.Latest, newVer)
+						notify(repoData.User, repoData.Repo, anchor.repoList[index].URL, repoData.Latest, newVer)
 					}
 				} else {
 					log.Printf("No new version found for package %v/%v", repoData.User, repoData.Repo)
