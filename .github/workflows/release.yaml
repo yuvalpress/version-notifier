@@ -105,3 +105,15 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           charts_dir: charts/version-notifier/
+
+      - name: Commit Helm Chart
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@gmail.com"
+          git commit -am "Bot: Automated Helm Chart Bump"
+
+      - name: Push Changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
