@@ -35,7 +35,7 @@ Create a dockerfile from the Version-Notifier base image and deploy it as a stan
     docker build -t {{ value }} .
     docker run --name {{ value }}
   ```
-
+</br></br>
 ## Configuration Options 🕹
 ### NOTIFY
 List represented as string with the following possible keywords: `major, minor, patch, all`
@@ -74,7 +74,7 @@ repos:
     ENV SLACK_CHANNEL {{ value }}
     ENV SLACK_TOKEN {{ value }}
   ```
-
+</br></br>
 ## Verification of Success 🎯
 If the deployment was successful, you'll see the logs rolling out of your container:
 ### Using Docker
