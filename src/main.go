@@ -3,18 +3,19 @@ package main
 import (
 	"errors"
 	"fmt"
-	jparser "github.com/Jeffail/gabs/v2"
-	"github.com/Masterminds/semver/v3"
-	xj "github.com/basgys/goxml2json"
-	"github.com/slack-go/slack"
-	validate "golang.org/x/mod/semver"
-	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	jparser "github.com/Jeffail/gabs/v2"
+	"github.com/Masterminds/semver/v3"
+	xj "github.com/basgys/goxml2json"
+	"github.com/slack-go/slack"
+	validate "golang.org/x/mod/semver"
+	"gopkg.in/yaml.v3"
 )
 
 var (
@@ -85,12 +86,12 @@ func levelsToNotify() []string {
 		return []string{"major", "minor", "patch"}
 	}
 
-	levels = strings.TrimSpace(strings.ToLower(os.Getenv("notify")))
+	levels = strings.TrimSpace(strings.ToLower(levels))
 	if levels == "all" {
 		return []string{"major", "minor", "patch"}
 	}
 
-	return strings.Split(os.Getenv("notify"), ",")
+	return strings.Split(levels, ",")
 }
 
 // getUrl build the github url with the needed user and repo
