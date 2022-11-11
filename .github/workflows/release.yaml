@@ -94,7 +94,7 @@ jobs:
         uses: mad9000/actions-find-and-replace-string@3
         with:
             source: ${{ steps.previous_tag_no_dots.outputs.value }}
-            find: '.'      
+            find: 'version-notifier-'      
             replace: ''
             replaceAll: 'true'
 
@@ -140,16 +140,16 @@ jobs:
         run: |
           yq -i '.version = "${{ needs.bump-version.outputs.newVer }}"' charts/version-notifier/Chart.yaml
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
       - name: Commit Helm Chart
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@gmail.com"
           git commit -am "Bot: Automated Helm Chart Bump"
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Push Changes
         uses: ad-m/github-push-action@master
