@@ -86,7 +86,8 @@ jobs:
         run: |
           echo "${{ steps.helm_version_timestamp.outputs.value }} ${{ steps.previous_tag.outputs.timestamp }}"
 
-      - uses: actions-ecosystem/action-bump-semver@v1
+      - name: Bump Version
+        uses: actions-ecosystem/action-bump-semver@v1
         id: new_helm_version
         if: steps.previous_tag.outputs.timestamp > steps.helm_version_timestamp.outputs.value
         with:
@@ -102,3 +103,5 @@ jobs:
         uses: helm/chart-releaser-action@v1.4.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          charts_dir: charts/version-notifier/
