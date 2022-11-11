@@ -25,6 +25,9 @@ jobs:
           files: |
              docker.version
 
+      - name: test
+        run: echo ${{ steps.verify-changed-files.outputs.changed_files }}
+
       - name: Perform action when test_directory changes
         if: contains(steps.verify-changed-files.outputs.changed_files, 'docker.version')
         run: |
