@@ -1,5 +1,8 @@
 # Version Notifier
 🕷 **Version Notifier** - your Friendly Neighborhood Spiderman, only geeker 🤓
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a3bbaf5dc7534b4a9bf9eaef49e41b34)](https://app.codacy.com/gh/yuvalpress/version-notifier?utm_source=github.com\&utm_medium=referral\&utm_content=yuvalpress/version-notifier\&utm_campaign=Badge_Grade_Settings)
+[![Docker Build](https://github.com/yuvalpress/version-notifier/workflows/Docker%20Build/badge.svg)](https://github.com/yuvalpress/version-notifier/actions?query=workflow%3ADocker%20Build)
+[![Chart Release](https://github.com/yuvalpress/version-notifier/workflows/Chart%20Release/badge.svg)](https://github.com/yuvalpress/version-notifier/actions?query=workflow%3A%22Chart+Release%22)
 
 Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
 </br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack channel.</br></br>
