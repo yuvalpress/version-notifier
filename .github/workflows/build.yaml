@@ -97,7 +97,8 @@ jobs:
             echo "level=minor" >> $GITHUB_OUTPUT
           fi
 
-      - uses: actions-ecosystem/action-bump-semver@v1
+      - name: Bump Version
+        uses: actions-ecosystem/action-bump-semver@v1
         id: new_helm_version
         with:
           current_version: ${{ steps.helm_version.outputs.helmVer }}
