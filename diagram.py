@@ -4,12 +4,12 @@ from diagrams.programming.language import Go
 from diagrams.onprem.vcs import Github
 from diagrams.custom import Custom
 
-with Diagram("\nVersion Notifier", show=False):
+with Diagram("\nVersion Notifier Service", show=False):
     with Cluster(""):
-        repo = Github("Repository")
+        repo = Github("Repositories")
         
         with Cluster("Version Notifier"):
-            notifier = Go("Version Notifier")
+            notifier = Go("Code")
             custom = Custom(label="Repo List", icon_path="./docs/config-file.png")
             custom - notifier
         
