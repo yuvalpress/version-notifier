@@ -85,11 +85,9 @@ If you executed Version Notifier using Docker, you'll see the logs roll after yo
 ```shell
 pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[0].metadata.name') && kubectl logs $pod -n notifier -f
 ```
-<br></br>
-## Upcoming Features ✨
-* Analyzing tags of Helm Charts released using the `helm/chart-releaser-action` GitHub Action.
-* Support for more notification methods (currently Slack only). 
 
+## Upcoming Features ✨
+* Support for more notification methods (currently Slack only).
 <br></br>
 ## Want to contribute? 💻
 PR's are more than welcome!
