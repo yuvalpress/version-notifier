@@ -3,3 +3,5 @@ repos:
   - hashicorp: terraform-provider-aws
   - hashicorp: terraform-provider-google
   - MuhammedKalkan: OpenLens
+  - open-metadata: openmetadata-helm-charts
+  - golang: go

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -79,6 +80,14 @@ func (a *Anchor) init() bool {
 	return true
 }
 
+// findRegexVersion returns the version inside a tag
+func findRegexVersion(version string) string {
+	r, _ := regexp.Compile("(\\d{1}|\\d{2}|\\d{3}|\\d{4})[.](\\d{1}|\\d{2}|\\d{3}|\\d{4})[.](\\d{1}|\\d{2}|\\d{3}|\\d{4})")
+	match := r.FindString(version)
+
+	return match
+}
+
 // stringInSlice returns true if string in list
 func stringInSlice(level string, list []string) bool {
 	for _, value := range list {
@@ -111,10 +120,7 @@ func getURL(username, repoName string) string {
 
 // getLatestTag receives the latest ID (tag) available in the .atom file
 func getLatestTag(data *jparser.Container) string {
-	tagID := strings.Split(data.Path("id").String(), "/")
-	ver := strings.ReplaceAll(tagID[len(tagID)-1], "\"", "")
-
-	return ver
+	return "v" + findRegexVersion(data.Path("id").String())
 }
 
 // getUpdateLevel returns the update level: Major, Minor, Patch
@@ -149,7 +155,7 @@ func doesNewTagExist(old, new string, repo string) (bool, string) {
 		return false, ""
 	}
 
-	log.Printf(Red+"The version for package: %v is not formatted in Semantic Versioning format"+Reset, repo)
+	log.Printf(Red+"Something went wrong while trying to parse latest version from %v"+Reset, repo)
 	return false, ""
 }
 
