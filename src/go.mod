@@ -1,4 +1,4 @@
-module elementor.red/versions-notifier
+module yuvalpress/version-notifier
 
 go 1.19
 
