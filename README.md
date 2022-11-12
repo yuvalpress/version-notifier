@@ -3,7 +3,7 @@
 
 Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
 </br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack channel.</br>
-
+![Architecture](./docs/service.png)
 ## Getting Started 🏁
 You can deploy the application in one of two ways:</br>
 ### HELM
