@@ -2,3 +2,4 @@ repos:
   - confluentinc: terraform-provider-confluent
   - hashicorp: terraform-provider-aws
   - hashicorp: terraform-provider-google
+  - MuhammedKalkan: OpenLens
