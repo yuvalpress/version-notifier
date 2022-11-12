@@ -2,7 +2,10 @@
 🕷 **Version Notifier** - your Friendly Neighborhood Spiderman, only geeker 🤓
 
 Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
-</br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack channel.</br></br>
+</br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack channel.</br>
+### Note :warning:
+Version Notifier currently supports Semantic Versioning only, meaning if a release is tagged otherwise, Version Notifier won't be able to notify about it.
+</br></br>
 
 ## Getting Started 🏁
 You can deploy the application in one of two ways:</br>
