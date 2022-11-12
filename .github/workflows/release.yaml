@@ -49,28 +49,11 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: ct install
 
-  # check-commiter:
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     isBot: ${{ steps.is_bot.outputs.skip }}
-  #   needs: chart-test
-  #   steps:
-  #     - name: Check for Bot Commiter
-  #       id: is_bot
-  #       run: |
-  #         if [[ "${{ github.event.head_commit.message }}" == *"Bot"* ]]; then
-  #           echo "skip=true" >> $GITHUB_OUTPUT
-  #         else
-  #           echo "skip=false" >> $GITHUB_OUTPUT
-  #         fi
-
   bump-version:
     runs-on: ubuntu-latest
     needs: chart-test
-    # needs: check-commiter
     outputs:
       newVer: ${{ steps.new_helm_version.outputs.new_version }}
-    # if: needs.check-commiter.outputs.isBot == 'false'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -107,83 +90,6 @@ jobs:
           current_version: ${{ steps.helm_version.outputs.helmVer }}
           level: ${{ steps.set_level.outputs.level }}
 
-      # - name: Get Latest Tag
-      #   id: previous_tag
-      #   uses: WyriHaximus/github-action-get-previous-tag@v1
-
-      # - name: Remove Dots From Latest Tag
-      #   id: previous_tag_no_dots
-      #   uses: mad9000/actions-find-and-replace-string@3
-      #   with:
-      #       source: ${{ steps.previous_tag.outputs.tag }}
-      #       find: '.'      
-      #       replace: ''
-      #       replaceAll: 'true'
-
-      # - name: Turn Helm Version To Timestamp Format
-      #   id: previous_tag_to_timestamp
-      #   uses: mad9000/actions-find-and-replace-string@3
-      #   with:
-      #       source: ${{ steps.previous_tag_no_dots.outputs.value }}
-      #       find: 'version-notifier-'      
-      #       replace: ''
-      #       replaceAll: 'true'
-
-      # - name: Configure yq
-      #   uses: mikefarah/yq@v4.30.1
-
-      # - name: Get Current Helm Chart Version
-      #   id: helm_version
-      #   run: |
-      #     echo "helmVer=$(yq '.version' charts/version-notifier/Chart.yaml)" >> $GITHUB_OUTPUT
-
-      # - name: Turn Helm Version To Timestamp Format
-      #   id: helm_version_timestamp
-      #   uses: mad9000/actions-find-and-replace-string@3
-      #   with:
-      #       source: ${{ steps.helm_version.outputs.helmVer }}
-      #       find: '.'      
-      #       replace: ''
-      #       replaceAll: 'true'
-
-      # - name: test
-      #   run: |
-      #     echo ${{ steps.previous_tag_to_timestamp.outputs.value }} ${{ steps.helm_version_timestamp.outputs.value }}
-
-      # - name: Parse semver string
-      #   id: semver_parser 
-      #   if: steps.previous_tag_to_timestamp.outputs.value >= steps.helm_version_timestamp.outputs.value
-      #   uses: booxmedialtd/ws-action-parse-semver@v1
-      #   with:
-      #     input_string: ${{ steps.helm_version.outputs.helmVer }}
-
-      # - name: Set Level
-      #   id: set_level
-      #   if: steps.previous_tag_to_timestamp.outputs.value >= steps.helm_version_timestamp.outputs.value
-      #   run: |
-      #     if [ $((${{ steps.semver_parser.outputs.patch }})) -lt $((9)) ]; then
-      #       echo "level=patch" >> $GITHUB_OUTPUT
-      #     else
-      #       echo "level=minor" >> $GITHUB_OUTPUT
-      #     fi
-
-      # - name: Bump Version
-      #   uses: actions-ecosystem/action-bump-semver@v1
-      #   id: new_helm_version
-      #   if: steps.previous_tag_to_timestamp.outputs.value >= steps.helm_version_timestamp.outputs.value
-      #   with:
-      #     current_version: ${{ steps.helm_version.outputs.helmVer }}
-      #     level: ${{ steps.set_level.outputs.level }}
-
-      # - name: Set Output
-      #   id: get_version
-      #   run: |
-      #     if [ ${{ steps.previous_tag_to_timestamp.outputs.value }} < ${{ steps.helm_version_timestamp.outputs.value }} ]; then
-      #       echo "newVer=${{ steps.helm_version.outputs.helmVer }}" >> $GITHUB_OUTPUT
-      #     else
-      #       echo "newVer=${{ steps.new_helm_version.outputs.new_version }}" >> $GITHUB_OUTPUT
-      #     fi 
-
   release:
     runs-on: ubuntu-latest
     needs: bump-version
@@ -213,23 +119,3 @@ jobs:
         uses: helm/chart-releaser-action@v1.4.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-  # release-on-bot:
-  #   runs-on: ubuntu-latest
-  #   needs: check-commiter
-  #   if: needs.check-commiter.outputs.isBot == 'true'
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Who Am I
-  #       run: |
-  #         git config user.name "$GITHUB_ACTOR"
-  #         git config user.email "$GITHUB_ACTOR@gmail.com"
-
-  #     - name: Run chart-releaser
-  #       uses: helm/chart-releaser-action@v1.4.0
-  #       env:
-  #         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
