@@ -7,7 +7,7 @@ deployment:
     annotations: {}
 
   spec:
-    replicas: 2
+    replicas: 1
 
     template:
       metadata:
@@ -15,7 +15,8 @@ deployment:
 
       image:
         image: yuvalpress/version-notifier
-        tag: latest # if not set, will default to the chart's appVersion
+        # if tag not set, will default to the chart's appVersion
+#        tag: latest
         imagePullPolicy: IfNotPresent
 
       resources:
