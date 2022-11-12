@@ -31,8 +31,8 @@ secret:
   enable: enable
   name: version-notifier-secret
   values: # only if enabled
-    SLACK_TOKEN: eG94Yi0yODg1NjM2NDYyLTQzNjg1NDMzMjQ4NDgtTHJmYmRvYzM0TFh2Z0g4WEhtYVM0Q29G
-    SLACK_CHANNEL: QzA0OU5CRzRUUEc=
+    SLACK_TOKEN: value
+    SLACK_CHANNEL: value
 
 # the repos to scrape
 configmap:
