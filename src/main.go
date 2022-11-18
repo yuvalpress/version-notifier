@@ -146,7 +146,6 @@ func getUpdateLevel(old, new string) string {
 func doesNewTagExist(old, new string, repo string) (bool, string) {
 	// validate version are indeed in semver format
 
-	log.Println(old, new)
 	if validate.IsValid(old) && validate.IsValid(new) {
 		oldVer := semver.MustParse(old)
 		newVer := semver.MustParse(new)
