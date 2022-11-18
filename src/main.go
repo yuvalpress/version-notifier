@@ -240,25 +240,27 @@ func main() {
 		time.Sleep(3 * time.Second)
 		for index, repoData := range anchor.repoList {
 			latest, _ := download(repoData.User, repoData.Repo)
-			if latest != nil {
-				result, newVer := doesNewTagExist(repoData.Latest, getLatestTag(latest[0]), repoData.User+"/"+repoData.Repo)
+			for !(latest != nil) {
+				latest, _ = download(repoData.User, repoData.Repo)
+			}
 
-				if result {
-					// update data
-					anchor.repoList[index].Latest = "v" + newVer
-					anchor.repoList[index].URL = latest[0].Path("link.-href").String()
-					log.Println(stringInSlice(getUpdateLevel(repoData.Latest, newVer), levels))
-					log.Println(anchor.repoList[index].Latest, newVer)
-					if stringInSlice(getUpdateLevel(repoData.Latest, newVer), levels) {
-						log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,
-							getUpdateLevel(repoData.Latest, newVer), repoData.User, repoData.Repo, newVer)
+			result, newVer := doesNewTagExist(repoData.Latest, getLatestTag(latest[0]), repoData.User+"/"+repoData.Repo)
 
-						// notify slack_notifier channel
-						notify(repoData.User, repoData.Repo, anchor.repoList[index].URL, repoData.Latest, newVer)
-					}
-				} else {
-					log.Printf("No new version found for package %v/%v", repoData.User, repoData.Repo)
+			if result {
+				// update data
+				anchor.repoList[index].Latest = "v" + newVer
+				anchor.repoList[index].URL = latest[0].Path("link.-href").String()
+				log.Println(stringInSlice(getUpdateLevel(repoData.Latest, newVer), levels))
+				log.Println(anchor.repoList[index].Latest, newVer)
+				if stringInSlice(getUpdateLevel(repoData.Latest, newVer), levels) {
+					log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,
+						getUpdateLevel(repoData.Latest, newVer), repoData.User, repoData.Repo, newVer)
+
+					// notify slack_notifier channel
+					notify(repoData.User, repoData.Repo, anchor.repoList[index].URL, repoData.Latest, newVer)
 				}
+			} else {
+				log.Printf("No new version found for package %v/%v", repoData.User, repoData.Repo)
 			}
 		}
 	}
