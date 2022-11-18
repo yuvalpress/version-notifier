@@ -2,7 +2,6 @@ package release_notes
 
 import (
 	"github.com/go-rod/rod"
-	"log"
 	"regexp"
 	"strings"
 )
@@ -21,8 +20,7 @@ func GetReleaseNotes(url string) string {
 			}
 		}
 	}
-
-	log.Println(divXPath)
+	
 	if divXPath != "" {
 		markdown := page.MustElementX(divXPath).MustHTML()
 

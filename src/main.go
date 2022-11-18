@@ -240,7 +240,11 @@ func main() {
 	for true {
 		time.Sleep(3 * time.Second)
 		for index, repoData := range anchor.repoList {
-			latest, _ := download(repoData.User, repoData.Repo)
+			latest, err := download(repoData.User, repoData.Repo)
+			if err != nil {
+				log.Printf(Red+"Failed to download data from %v with the following error: %v"+Reset,
+					getURL(repoData.User, repoData.Repo), err)
+			}
 
 			if latest != nil {
 				result, newVer := doesNewTagExist(repoData.Latest, getLatestTag(latest[0]), repoData.User+"/"+repoData.Repo)
