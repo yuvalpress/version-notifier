@@ -120,7 +120,7 @@ func getURL(username, repoName string) string {
 
 // getLatestTag receives the latest ID (tag) available in the .atom file
 func getLatestTag(data *jparser.Container) string {
-	log.Println("v" + findRegexVersion(data.Path("id").String()))
+	log.Println("Latest tag: v" + findRegexVersion(data.Path("id").String()))
 	return "v" + findRegexVersion(data.Path("id").String())
 }
 
