@@ -5,3 +5,4 @@ repos:
   - MuhammedKalkan: OpenLens
   - open-metadata: openmetadata-helm-charts
   - golang: go
+  - yuvalpress: version-notifier

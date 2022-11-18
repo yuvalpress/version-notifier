@@ -120,6 +120,7 @@ func getURL(username, repoName string) string {
 
 // getLatestTag receives the latest ID (tag) available in the .atom file
 func getLatestTag(data *jparser.Container) string {
+	log.Println("v" + findRegexVersion(data.Path("id").String()))
 	return "v" + findRegexVersion(data.Path("id").String())
 }
 
@@ -144,6 +145,8 @@ func getUpdateLevel(old, new string) string {
 // are in semantic version format
 func doesNewTagExist(old, new string, repo string) (bool, string) {
 	// validate version are indeed in semver format
+
+	log.Println(old, new)
 	if validate.IsValid(old) && validate.IsValid(new) {
 		oldVer := semver.MustParse(old)
 		newVer := semver.MustParse(new)
@@ -204,7 +207,7 @@ func download(username, repoName string) ([]*jparser.Container, error) {
 	tagsData := parseJSON.Path("feed.entry").Children()
 
 	if len(tagsData) == 0 {
-		return nil, errors.New("request returned with 0 tags listed..trying again")
+		return nil, errors.New("request returned with 0 tags listed")
 	}
 
 	return tagsData, nil
