@@ -1,5 +1,5 @@
 application:
-  notify: "major, patch"
+  notify: "major, minor, patch"
 
 deployment:
   metadata:

@@ -243,7 +243,6 @@ func main() {
 			latest, err := download(repoData.User, repoData.Repo)
 			if err != nil {
 				log.Printf(Red+"Failed scraping %v: %v"+Reset, repoData.User+"/"+repoData.Repo, err)
-				log.Printf(Red+"Scraping problem: %v"+Reset, err)
 			}
 
 			if latest != nil {
@@ -251,7 +250,6 @@ func main() {
 
 				if result {
 					updateLevel := getUpdateLevel(repoData.Latest, newVer)
-					log.Println(updateLevel)
 
 					if stringInSlice(updateLevel, levels) {
 						log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,
