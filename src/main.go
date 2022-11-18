@@ -242,8 +242,8 @@ func main() {
 		for index, repoData := range anchor.repoList {
 			latest, err := download(repoData.User, repoData.Repo)
 			if err != nil {
-				log.Printf(Red+"Failed to download data from %v with the following error: %v"+Reset,
-					getURL(repoData.User, repoData.Repo), err)
+				log.Printf(Red+"Failed scraping %v: %v"+Reset, repoData.User+"/"+repoData.Repo, err)
+				log.Printf(Red+"Scraping problem: %v"+Reset, err)
 			}
 
 			if latest != nil {
