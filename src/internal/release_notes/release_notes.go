@@ -2,7 +2,6 @@ package release_notes
 
 import (
 	"github.com/go-rod/rod"
-	"log"
 	"regexp"
 	"strings"
 )
@@ -10,7 +9,6 @@ import (
 // GetReleaseNotes receives url as string and fetches the release notes from it - if exist
 func GetReleaseNotes(url string) string {
 	divXPath := ""
-	log.Println(url)
 	page := rod.New().MustConnect().MustPage(url).MustWaitLoad()
 
 	// fetch release notes div if exists
