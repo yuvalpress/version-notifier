@@ -247,7 +247,8 @@ func main() {
 					// update data
 					anchor.repoList[index].Latest = "v" + newVer
 					anchor.repoList[index].URL = latest[0].Path("link.-href").String()
-
+					log.Println(stringInSlice(getUpdateLevel(repoData.Latest, newVer), levels))
+					log.Println(anchor.repoList[index].Latest, newVer)
 					if stringInSlice(getUpdateLevel(repoData.Latest, newVer), levels) {
 						log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,
 							getUpdateLevel(repoData.Latest, newVer), repoData.User, repoData.Repo, newVer)
