@@ -10,7 +10,6 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"yuvalpress/version-notifier/internal/release_notes"
 	"yuvalpress/version-notifier/internal/slack_notifier"
 
 	jparser "github.com/Jeffail/gabs/v2"
@@ -220,7 +219,6 @@ func notify(user, repo, url, oldVer, newVer string) {
 
 // main
 func main() {
-	release_notes.GetReleaseNotes("https://github.com/google/go-github/releases/tag/v48.1.0")
 	// initialize application data until successful
 	log.Println("Starting application...")
 
