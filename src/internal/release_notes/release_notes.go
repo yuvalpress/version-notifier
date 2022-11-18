@@ -2,19 +2,29 @@ package release_notes
 
 import (
 	"github.com/go-rod/rod"
+	"log"
 	"regexp"
 	"strings"
 )
 
 // GetReleaseNotes receives url as string and fetches the release notes from it - if exist
-func GetReleaseNotes(url string) (string, string) {
-	blockType := "mrkdwn"
+func GetReleaseNotes(url string) string {
+	divXPath := ""
 	page := rod.New().MustConnect().MustPage(url).MustWaitLoad()
 
 	// fetch release notes div if exists
-	check := page.MustHas("#repo-content-pjax-container > div > div > div > div.Box-body > div.markdown-body.my-3")
-	if check {
-		markdown := page.MustElement("#repo-content-pjax-container > div > div > div > div.Box-body > div.markdown-body.my-3").MustHTML()
+	elements, _ := page.Elements("div")
+	for _, v := range elements {
+		if v.MustAttribute("Class") != nil {
+			if strings.Contains(*v.MustAttribute("Class"), "markdown-body my-3") {
+				divXPath = v.MustGetXPath(true)
+			}
+		}
+	}
+
+	log.Println(divXPath)
+	if divXPath != "" {
+		markdown := page.MustElementX(divXPath).MustHTML()
 
 		// find all tags with regex
 		compile, _ := regexp.Compile("<.*?>")
@@ -23,12 +33,10 @@ func GetReleaseNotes(url string) (string, string) {
 		if len(tags) > 0 {
 			markdown = strings.Replace(markdown, tags[0], "", 1)
 			markdown = strings.Replace(markdown, tags[len(tags)-1], "", 1)
-		} else {
-			blockType = "plain_text"
 		}
 
-		return blockType, markdown
+		return markdown
 	}
 
-	return "", ""
+	return ""
 }
