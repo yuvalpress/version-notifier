@@ -72,7 +72,8 @@ func (a *Anchor) init() bool {
 				User:   username,
 				Repo:   repoName,
 				Latest: getLatestTag(data[0]),
-				URL:    data[0].Path("link.-href").String()})
+				URL:    strings.ReplaceAll(data[0].Path("link.-href").String(), "\"", ""),
+			})
 		}
 	}
 
