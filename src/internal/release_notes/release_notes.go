@@ -2,7 +2,6 @@ package release_notes
 
 import (
 	"github.com/go-rod/rod"
-	"regexp"
 	"strings"
 )
 
@@ -22,18 +21,7 @@ func GetReleaseNotes(url string) string {
 	}
 
 	if divXPath != "" {
-		markdown := page.MustElementX(divXPath).MustHTML()
-
-		// find all tags with regex
-		compile, _ := regexp.Compile("<.*?>")
-		tags := compile.FindAllString(markdown, -1)
-
-		if len(tags) > 0 {
-			markdown = strings.Replace(markdown, tags[0], "", 1)
-			markdown = strings.Replace(markdown, tags[len(tags)-1], "", 1)
-		}
-
-		return markdown
+		return page.MustElementX(divXPath).MustText()
 	}
 
 	return ""
