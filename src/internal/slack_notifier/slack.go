@@ -29,9 +29,9 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel string) {
 		_, _, err := slackClient.PostMessage(
 			os.Getenv("SLACK_CHANNEL"),
 			slack.MsgOptionAttachments(attachment),
-			slack.MsgOptionBlocks(slack.NewSectionBlock(
-				slack.NewTextBlockObject("plain_text", "*New"+updateLevel+"update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false, false), nil, nil),
-				slack.NewTextBlockObject("plain_text", notes, false, false), nil, nil))
+			slack.MsgOptionBlocks(
+				slack.NewSectionBlock(slack.NewTextBlockObject("plain_text", notes, false, false), nil, nil),
+				slack.NewSectionBlock(slack.NewTextBlockObject("plain_text", "*New"+updateLevel+"update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false, false), nil, nil)))
 
 		if err != nil {
 			fmt.Printf(Red+"Faild to post message to slack_notifier with the following error: %s\n"+Reset, err)
