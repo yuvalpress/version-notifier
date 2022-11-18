@@ -38,12 +38,7 @@ secret:
 # the repos to scrape
 configmap:
   repos:
-    - confluentinc: terraform-provider-confluent
+    - yuvalpress: version-notifier
     - hashicorp: terraform-provider-aws
     - hashicorp: terraform-provider-google
-    - MuhammedKalkan: OpenLens
-    - helm: helm
-    - helm: chartmuseum
-    - kubernetes: kubernetes
-    - kubernetes: kubectl
 
