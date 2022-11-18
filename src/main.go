@@ -263,7 +263,7 @@ func main() {
 
 				if result {
 					// update data
-					anchor.repoList[index].Latest = newVer
+					anchor.repoList[index].Latest = "v" + newVer
 					anchor.repoList[index].URL = latest[0].Path("link.-href").String()
 
 					if stringInSlice(getUpdateLevel(repoData.Latest, newVer), levels) {
