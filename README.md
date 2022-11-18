@@ -21,7 +21,7 @@ Create a dockerfile from the Version-Notifier base image and deploy it as a stan
     # Name this file Dockerfile
     FROM yuvalpress/version-notifier:latest
     
-    # You MUST Set this environment variables for the application to send notification to slack
+    # You MUST Set this environment variables for the application to send notification to slack_notifier
     ENV SLACK_CHANNEL {{ value }}
     ENV SLACK_TOKEN {{ value }}
 
@@ -70,7 +70,7 @@ repos:
     # add custom config.yaml file
     COPY config.yaml ./config.yaml
     
-    # You MUST Set this environment variables for the application to send notification to slack
+    # You MUST Set this environment variables for the application to send notification to slack_notifier
     ENV SLACK_CHANNEL {{ value }}
     ENV SLACK_TOKEN {{ value }}
   ```

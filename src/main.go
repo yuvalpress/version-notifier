@@ -3,7 +3,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,11 +10,12 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"yuvalpress/version-notifier/internal/release_notes"
+	"yuvalpress/version-notifier/internal/slack_notifier"
 
 	jparser "github.com/Jeffail/gabs/v2"
 	"github.com/Masterminds/semver/v3"
 	xj "github.com/basgys/goxml2json"
-	"github.com/slack-go/slack"
 	validate "golang.org/x/mod/semver"
 	"gopkg.in/yaml.v3"
 )
@@ -215,27 +215,12 @@ func download(username, repoName string) ([]*jparser.Container, error) {
 // notify is responsible for notifying a selected Slack channel.
 // in the future, more methods will be added
 func notify(user, repo, url, oldVer, newVer string) {
-	slackClient := slack.New(os.Getenv("SLACK_TOKEN"))
-
-	level := getUpdateLevel(oldVer, newVer)
-	attachment := slack.Attachment{
-		Pretext: "New Version Details:",
-		Text:    url,
-	}
-	_, _, err := slackClient.PostMessage(
-		os.Getenv("SLACK_CHANNEL"),
-		slack.MsgOptionText("*New"+level+"update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false),
-		slack.MsgOptionAttachments(attachment),
-		slack.MsgOptionUsername("Version Notifier"),
-	)
-	if err != nil {
-		fmt.Printf(Red+"Faild to post message to slack with the following error: %s\n"+Reset, err)
-		return
-	}
+	slack_notifier.Notify(user, repo, url, oldVer, newVer, getUpdateLevel(oldVer, newVer))
 }
 
 // main
 func main() {
+	release_notes.GetReleaseNotes("https://github.com/google/go-github/releases/tag/v48.1.0")
 	// initialize application data until successful
 	log.Println("Starting application...")
 
@@ -269,7 +254,7 @@ func main() {
 						log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,
 							getUpdateLevel(repoData.Latest, newVer), repoData.User, repoData.Repo, newVer)
 
-						// notify slack channel
+						// notify slack_notifier channel
 						notify(repoData.User, repoData.Repo, anchor.repoList[index].URL, repoData.Latest, newVer)
 					}
 				} else {
