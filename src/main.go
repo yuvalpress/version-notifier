@@ -251,18 +251,21 @@ func main() {
 
 				if result {
 					updateLevel := getUpdateLevel(repoData.Latest, newVer)
+					log.Println(updateLevel)
 
 					if stringInSlice(updateLevel, levels) {
 						log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,
 							updateLevel, repoData.User, repoData.Repo, newVer)
 
 						// notify slack_notifier channel
-						notify(repoData.User, repoData.Repo, anchor.repoList[index].URL, repoData.Latest, newVer)
+						notify(repoData.User, repoData.Repo, repoData.URL, repoData.Latest, newVer)
 
-						// update data
-						anchor.repoList[index].Latest = "v" + newVer
-						anchor.repoList[index].URL = latest[0].Path("link.-href").String()
 					}
+
+					// update data
+					anchor.repoList[index].Latest = "v" + newVer
+					anchor.repoList[index].URL = latest[0].Path("link.-href").String()
+
 				} else {
 					log.Printf("No new version found for package %v/%v", repoData.User, repoData.Repo)
 				}
