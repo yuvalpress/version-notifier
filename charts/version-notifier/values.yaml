@@ -1,6 +1,7 @@
 application:
   notify: "major, minor, patch"
-  notification_method: "telegram" # telegram or slack
+  notification_method: "telegram" # telegram or slack - must be set
+  send_full_changelog: "false"
 
 deployment:
   metadata:
@@ -31,10 +32,18 @@ deployment:
 # not recommended to enable the secret as the values need to be hard coded in the chart
 secret:
   enable: enable
+  type: telegram # slack or telegram
   name: version-notifier-secret
-  values: # only if enabled
+
+  # only if enabled
+  # NOTE - set values to a base64 form of your required value
+  values:
+    # only if type is slack
     SLACK_TOKEN: value
     SLACK_CHANNEL: value
+    # only if type is telegram
+    TELEGRAM_TOKEN: value
+    TELEGRAM_CHAT_ID: value
 
 # the repos to scrape
 configmap:

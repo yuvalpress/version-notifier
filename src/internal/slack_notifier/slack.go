@@ -16,7 +16,7 @@ var (
 )
 
 // Notify sends a slack message with the supplied data
-func Notify(user, repo, url, oldVer, newVer, updateLevel string) {
+func Notify(user, repo, url, oldVer, newVer, updateLevel string, sendFullChangelog bool) {
 	slackClient := slack.New(os.Getenv("SLACK_TOKEN"))
 
 	attachment := slack.Attachment{
@@ -25,7 +25,7 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel string) {
 	}
 
 	notes := release_notes.GetReleaseNotes(url, "text")
-	if notes != "" {
+	if notes != "" && sendFullChangelog {
 		_, _, err := slackClient.PostMessage(
 			os.Getenv("SLACK_CHANNEL"),
 			slack.MsgOptionAttachments(attachment),

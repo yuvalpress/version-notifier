@@ -56,6 +56,12 @@ spec:
               {{ else -}}
               value: "not set"
               {{ end }}
+            - name: {{ upper "send_full_changelog" }}
+              {{ if .Values.application.send_full_changelog -}}
+              value: {{ .Values.application.send_full_changelog }}
+              {{ else -}}
+              value: "false"
+              {{ end }}
           envFrom:
             - secretRef:
                 {{- if .Values.secret.name }}

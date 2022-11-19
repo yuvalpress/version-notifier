@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 	"yuvalpress/version-notifier/internal/slack_notifier"
@@ -216,14 +217,30 @@ func download(username, repoName string) ([]*jparser.Container, error) {
 // notify is responsible for notifying a selected Slack channel.
 // in the future, more methods will be added
 func notify(user, repo, url, oldVer, newVer string) {
-	method := os.Getenv("NOTIFICATION_METHOD")
+	method, found := os.LookupEnv("NOTIFICATION_METHOD")
+	if !found {
+		log.Panicln("The NOTIFICATION_METHOD environment variable must be set!")
+	}
+
+	sendFullChangelog, found := os.LookupEnv("SEND_FULL_CHANGELOG")
+	if !found {
+		log.Println("The SEND_FULL_CHANGELOG environment variable is not set! Defaulting to `false`")
+	}
+
+	// convert to bool
+	sendBool, err := strconv.ParseBool(sendFullChangelog)
+	if err != nil {
+		log.Panicf("The SEND_FULL_CHANGELOG environment variable must be set to true or false only!")
+	}
 
 	if method == "not set" {
 		log.Panicln("The NOTIFICATION_METHOD environment variable must be set!")
+
 	} else if method == "telegram" {
-		telegram_notifier.Notify(user, repo, url, oldVer, newVer, getUpdateLevel(oldVer, newVer))
+		telegram_notifier.Notify(user, repo, url, oldVer, newVer, getUpdateLevel(oldVer, newVer), sendBool)
+
 	} else if method == "slack" {
-		slack_notifier.Notify(user, repo, url, oldVer, newVer, getUpdateLevel(oldVer, newVer))
+		slack_notifier.Notify(user, repo, url, oldVer, newVer, getUpdateLevel(oldVer, newVer), sendBool)
 	}
 }
 

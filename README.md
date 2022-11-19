@@ -2,7 +2,7 @@
 🕷 **Version Notifier** - your Friendly Neighborhood Spiderman, only geeker 🤓
 
 Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
-</br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack channel.</br>
+</br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack / Telegram channel.</br></br>
 ![Architecture](./docs/service.png)
 ## Getting Started 🏁
 You can deploy the application in one of two ways:</br>
@@ -21,12 +21,20 @@ Create a dockerfile from the Version-Notifier base image and deploy it as a stan
     # Name this file Dockerfile
     FROM yuvalpress/version-notifier:latest
     
-    # You MUST Set this environment variables for the application to send notification to slack_notifier
+    # NOTE - Set only one method - slack or telegram - not both
+    # You MUST Set this environment variables for the application to send notification to slack
+    ENV NOTIFICATION_METHOD slack
     ENV SLACK_CHANNEL {{ value }}
     ENV SLACK_TOKEN {{ value }}
+    
+    # You MUST Set this environment variables for the application to send notification to telegram
+    ENV NOTIFICATION_METHOD telegram
+    ENV TELEGRAM_TOKEN {{ value }}
+    ENV TELEGRAM_CHAT_ID {{ value }}
 
     # Optional
     ENV NOTIFY {{ value }}
+    ENV SEND_FULL_CHANGELOG {{ value }}
   ```
   
   Build and Deploy:
@@ -46,6 +54,10 @@ List represented as string with the following possible keywords: `major, minor, 
   * "minor" - only notify about `minor` version changes
 
 If not set, NOTIFY will be automatically set to `all`</br></br>
+
+### SEND_FULL_CHANGELOG
+Boolean value represented as a string: `true` or `false`</br>
+This environment variable is responsible for the form of the message to be sent.</br>
 
 ### config.yaml
 The config.yaml file holds the repositories to be scraped by Version-Notifier.
@@ -70,11 +82,18 @@ repos:
     # add custom config.yaml file
     COPY config.yaml ./config.yaml
     
-    # You MUST Set this environment variables for the application to send notification to slack_notifier
+    # NOTE - Set only one method - slack or telegram - not both
+    # You MUST Set this environment variables for the application to send notification to slack
+    ENV NOTIFICATION_METHOD slack
     ENV SLACK_CHANNEL {{ value }}
     ENV SLACK_TOKEN {{ value }}
+    
+    # You MUST Set this environment variables for the application to send notification to telegram
+    ENV NOTIFICATION_METHOD telegram
+    ENV TELEGRAM_TOKEN {{ value }}
+    ENV TELEGRAM_CHAT_ID {{ value }}
   ```
-</br></br>
+</br>
 ## Verification of Success 🎯
 If the deployment was successful, you'll see the logs rolling out of your container:
 ### Using Docker
@@ -88,10 +107,11 @@ pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[
 
 ## Upcoming Features ✨
 * Support for more notification methods (currently Slack only).
+* Support more than one notification method at a time (currently Slack only).
 * Add support for Pypi repositories
 * Add support for private GitHub repositories
 * Add support for Docker Images in Dockerhub
-<br></br>
+<br>
 ## Want to contribute? 💻
 PR's are more than welcome!
 
