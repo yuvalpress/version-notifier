@@ -7,4 +7,6 @@ COPY ./src ./
 RUN go mod download
 RUN go build -o /version-notifier
 
+RUN apk add chromium
+
 CMD [ "/version-notifier" ]

@@ -2,13 +2,16 @@ package release_notes
 
 import (
 	"github.com/go-rod/rod"
+	"github.com/go-rod/rod/lib/launcher"
 	"strings"
 )
 
 // GetReleaseNotes receives url as string and fetches the release notes from it - if exist
 func GetReleaseNotes(url string) string {
 	divXPath := ""
-	page := rod.New().MustConnect().MustPage(url).MustWaitLoad()
+	path, _ := launcher.LookPath()
+	u := launcher.New().Bin(path).MustLaunch()
+	page := rod.New().ControlURL(u).MustConnect().MustPage(url).MustWaitLoad()
 
 	// fetch release notes div if exists
 	elements, _ := page.Elements("div")
