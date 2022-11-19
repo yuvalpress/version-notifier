@@ -54,7 +54,7 @@ spec:
               {{ if .Values.application.notification_method -}}
               value: {{ .Values.application.notification_method }}
               {{ else -}}
-              value: "not set"
+              value: "none"
               {{ end }}
             - name: {{ upper "send_full_changelog" }}
               {{ if .Values.application.send_full_changelog -}}

@@ -1,6 +1,6 @@
 application:
   notify: "major, minor, patch"
-  notification_method: "telegram" # telegram or slack - must be set
+  notification_method: "none" # telegram or slack - must be set
   send_full_changelog: "false"
 
 deployment:

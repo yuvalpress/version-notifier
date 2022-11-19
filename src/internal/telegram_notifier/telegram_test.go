@@ -6,8 +6,9 @@ import (
 )
 
 func TestNotify(t *testing.T) {
-	_ = os.Setenv("TELEGRAM_TOKEN", "5808559800:AAEb2JxWD8V-69EHac_jXYUXmxOneLQOSKA")
-	_ = os.Setenv("TELEGRAM_CHAT_ID", "876700915")
+	// TODO: Fill this values using GitHub Actions
+	_ = os.Setenv("TELEGRAM_TOKEN", "")
+	_ = os.Setenv("TELEGRAM_CHAT_ID", "")
 
 	Notify("google",
 		"go-github",

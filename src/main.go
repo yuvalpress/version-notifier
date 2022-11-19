@@ -233,7 +233,7 @@ func notify(user, repo, url, oldVer, newVer string) {
 		log.Panicf("The SEND_FULL_CHANGELOG environment variable must be set to true or false only!")
 	}
 
-	if method == "not set" {
+	if method == "none" {
 		log.Panicln("The NOTIFICATION_METHOD environment variable must be set!")
 
 	} else if method == "telegram" {
