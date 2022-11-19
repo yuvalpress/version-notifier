@@ -1,5 +1,6 @@
 application:
   notify: "major, minor, patch"
+  notification_method: "telegram" # telegram or slack
 
 deployment:
   metadata:

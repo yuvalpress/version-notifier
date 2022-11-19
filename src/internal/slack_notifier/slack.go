@@ -24,7 +24,7 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel string) {
 		Text:    url,
 	}
 
-	notes := release_notes.GetReleaseNotes(url)
+	notes := release_notes.GetReleaseNotes(url, "text")
 	if notes != "" {
 		_, _, err := slackClient.PostMessage(
 			os.Getenv("SLACK_CHANNEL"),

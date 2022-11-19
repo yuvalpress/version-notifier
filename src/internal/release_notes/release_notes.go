@@ -3,11 +3,13 @@ package release_notes
 import (
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
+	"regexp"
 	"strings"
 )
 
 // GetReleaseNotes receives url as string and fetches the release notes from it - if exist
-func GetReleaseNotes(url string) string {
+// format can be mrkdwn or text
+func GetReleaseNotes(url, format string) string {
 	divXPath := ""
 	path, _ := launcher.LookPath()
 	u := launcher.New().Bin(path).MustLaunch()
@@ -24,7 +26,22 @@ func GetReleaseNotes(url string) string {
 	}
 
 	if divXPath != "" {
-		return page.MustElementX(divXPath).MustText()
+		if format == "text" {
+			return page.MustElementX(divXPath).MustText()
+
+		} else if format == "mrkdwn" {
+			markdown := page.MustElementX(divXPath).MustHTML()
+			// find all tags with regex
+			compile, _ := regexp.Compile("<.*?>")
+			tags := compile.FindAllString(markdown, -1)
+
+			if len(tags) > 0 {
+				markdown = strings.Replace(markdown, tags[0], "", 1)
+				markdown = strings.Replace(markdown, tags[len(tags)-1], "", 1)
+			}
+
+			return markdown
+		}
 	}
 
 	return ""

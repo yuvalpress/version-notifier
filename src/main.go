@@ -10,8 +10,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"yuvalpress/version-notifier/internal/release_notes"
 	"yuvalpress/version-notifier/internal/slack_notifier"
+	"yuvalpress/version-notifier/internal/telegram_notifier"
 
 	jparser "github.com/Jeffail/gabs/v2"
 	"github.com/Masterminds/semver/v3"
@@ -216,12 +216,19 @@ func download(username, repoName string) ([]*jparser.Container, error) {
 // notify is responsible for notifying a selected Slack channel.
 // in the future, more methods will be added
 func notify(user, repo, url, oldVer, newVer string) {
-	slack_notifier.Notify(user, repo, url, oldVer, newVer, getUpdateLevel(oldVer, newVer))
+	method := os.Getenv("NOTIFICATION_METHOD")
+
+	if method == "not set" {
+		log.Panicln("The NOTIFICATION_METHOD environment variable must be set!")
+	} else if method == "telegram" {
+		telegram_notifier.Notify(user, repo, url, oldVer, newVer, getUpdateLevel(oldVer, newVer))
+	} else if method == "slack" {
+		slack_notifier.Notify(user, repo, url, oldVer, newVer, getUpdateLevel(oldVer, newVer))
+	}
 }
 
 // main
 func main() {
-	release_notes.GetReleaseNotes("https://github.com/yuvalpress/version-notifier/releases/tag/version-notifier-0.6.2")
 	// initialize application data until successful
 	log.Println("Starting application...")
 

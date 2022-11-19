@@ -45,11 +45,17 @@ spec:
             limits:
               memory: {{ .Values.deployment.spec.template.resources.limits.memory }}
               cpu: {{ .Values.deployment.spec.template.resources.limits.cpu }}
-          {{ if .Values.application.notify }}
           env:
+            {{ if .Values.application.notify -}}
             - name: {{ upper "notify" }}
               value: {{ .Values.application.notify }}
-          {{ end }}
+            {{ end }}
+            - name: {{ upper "notification_method" }}
+              {{ if .Values.application.notification_method -}}
+              value: {{ .Values.application.notification_method }}
+              {{ else -}}
+              value: "not set"
+              {{ end }}
           envFrom:
             - secretRef:
                 {{- if .Values.secret.name }}
