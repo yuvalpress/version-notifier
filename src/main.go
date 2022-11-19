@@ -257,14 +257,16 @@ func main() {
 						log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,
 							updateLevel, repoData.User, repoData.Repo, newVer)
 
+						// update releases link
+						anchor.repoList[index].URL = strings.ReplaceAll(latest[0].Path("link.-href").String(), "\"", "")
+
 						// notify slack_notifier channel
-						notify(repoData.User, repoData.Repo, repoData.URL, repoData.Latest, newVer)
+						notify(repoData.User, repoData.Repo, anchor.repoList[index].URL, repoData.Latest, "v"+newVer)
 
 					}
 
-					// update data
+					// update latest version
 					anchor.repoList[index].Latest = "v" + newVer
-					anchor.repoList[index].URL = latest[0].Path("link.-href").String()
 
 				} else {
 					log.Printf("No new version found for package %v/%v", repoData.User, repoData.Repo)
