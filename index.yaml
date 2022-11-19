@@ -4,9 +4,7 @@ entries:
   - apiVersion: v2
     appVersion: '0.6.6 '
     created: "2022-11-19T01:47:51.525156432Z"
-    description: This chart was made to keep every team member updated regarding version
-      of packages charts images and basically whatever is available as a github release
-      (package)
+    description: "Version Notifier is a modern solution for the being notified aspect of each Techy's day-to-day work. By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack channel."
     digest: f1074e1c2cb2fc7652e75a5f865bd917175c0c00229fd705213bb4e3726d3a74
     maintainers:
     - email: yuvalpress@gmail.com
