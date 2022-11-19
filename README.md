@@ -93,6 +93,7 @@ repos:
     ENV TELEGRAM_TOKEN {{ value }}
     ENV TELEGRAM_CHAT_ID {{ value }}
   ```
+<br></br>
 ## Verification of Success 🎯
 If the deployment was successful, you'll see the logs rolling out of your container:
 ### Using Docker
