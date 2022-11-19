@@ -93,7 +93,7 @@ repos:
     ENV TELEGRAM_TOKEN {{ value }}
     ENV TELEGRAM_CHAT_ID {{ value }}
   ```
-</br>
+
 ## Verification of Success 🎯
 If the deployment was successful, you'll see the logs rolling out of your container:
 ### Using Docker
@@ -107,7 +107,7 @@ pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[
 
 ## Upcoming Features ✨
 * Support for more notification methods (currently Slack only).
-* Support more than one notification method at a time (currently Slack only).
+* Support more than one notification method at a time.
 * Add support for Pypi repositories
 * Add support for private GitHub repositories
 * Add support for Docker Images in Dockerhub
