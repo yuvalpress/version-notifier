@@ -45,7 +45,7 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel string, sendFullChangel
 				slack.NewSectionBlock(slack.NewTextBlockObject("plain_text", notes, false, false), nil, nil)))
 
 		if err != nil {
-			fmt.Printf(Red+"Faild to post message to slack_notifier with the following error: %s\n"+Reset, err)
+			fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
 			return
 		}
 
@@ -57,7 +57,7 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel string, sendFullChangel
 			slack.MsgOptionUsername("Version Notifier"),
 		)
 		if err != nil {
-			fmt.Printf(Red+"Faild to post message to slack_notifier with the following error: %s\n"+Reset, err)
+			fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
 			return
 		}
 	}

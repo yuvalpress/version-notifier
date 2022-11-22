@@ -29,6 +29,8 @@ jobs:
 
   test-go:
     runs-on: ubuntu-latest
+    outputs:
+      passed: ${{ steps.tests.outputs.result }}
     needs: validate-bump
     if: needs.validate-bump.outputs.bumped == 'true'
     steps:
@@ -41,18 +43,25 @@ jobs:
           go-version: 1.19.3
 
       - name: Run Tests
+        id: tests
         working-directory: ./src
         env:
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
           SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: go test -v ./...
+        run: |
+          if [[ $(expr $(go test --json ./... | grep Failed | wc -w)) > 0 ]]; then 
+            echo "result=false" >> $GITHUB_OUTPUT
+          else
+            echo "result=true" >> $GITHUB_OUTPUT
+          fi
 
   docker:
     runs-on: ubuntu-latest
     outputs:
       docker_version: ${{ steps.docker_version.outputs.content }}
+    if: needs.test-go.outputs.passed == 'true'
     needs: test-go
     steps:
       - name: Checkout
