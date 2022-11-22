@@ -212,6 +212,7 @@ func download(username, repoName string) ([]*jparser.Container, error) {
 	}
 
 	tagsData := parseJSON.Path("feed.entry").Children()
+	log.Println(parseJSON.String())
 
 	if len(tagsData) == 0 {
 		return nil, errors.New("request returned with 0 tags listed")
@@ -264,6 +265,12 @@ func main() {
 
 	levels := levelsToNotify()
 	log.Printf("Notifications will be sent for: %s\n", levels)
+
+	if LogLevel == "" {
+		LogLevel = "INFO"
+	}
+
+	log.Printf("Log Level is set for: %s\n", LogLevel)
 
 	log.Println("Done!")
 	log.Println("-----------------------------------------------------")
