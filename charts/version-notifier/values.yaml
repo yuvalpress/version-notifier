@@ -40,11 +40,11 @@ secret:
   # NOTE - set values to a base64 form of your required value
   values:
     # only if type is slack
-    SLACK_TOKEN: value
-    SLACK_CHANNEL: value
+    SLACK_TOKEN: dmFsdWU=
+    SLACK_CHANNEL: dmFsdWU=
     # only if type is telegram
-    TELEGRAM_TOKEN: value
-    TELEGRAM_CHAT_ID: value
+    TELEGRAM_TOKEN: dmFsdWU=
+    TELEGRAM_CHAT_ID: dmFsdWU=
 
 # the repos to scrape
 configmap:
