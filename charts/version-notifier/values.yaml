@@ -31,20 +31,30 @@ deployment:
           cpu: "250"
 
 # not recommended to enable the secret as the values need to be hard coded in the chart
-secret:
-  enable: enable
-  type: telegram # slack or telegram
-  name: version-notifier-secret
+secrets:
+  notification:
+    enable: enable
+    type: telegram # slack or telegram
+    name: version-notifier-notification-secret
 
-  # only if enabled
-  # NOTE - set values to a base64 form of your required value
-  values:
-    # only if type is slack
-    SLACK_TOKEN: dmFsdWU=
-    SLACK_CHANNEL: dmFsdWU=
-    # only if type is telegram
-    TELEGRAM_TOKEN: dmFsdWU=
-    TELEGRAM_CHAT_ID: dmFsdWU=
+    # only if enabled
+    values:
+      # only if type is slack
+      SLACK_TOKEN: dmFsdWU=
+      SLACK_CHANNEL: dmFsdWU=
+      # only if type is telegram
+      TELEGRAM_TOKEN: dmFsdWU=
+      TELEGRAM_CHAT_ID: dmFsdWU=
+
+  github:
+    enable: enable
+    name: version-notifier-github-secret
+
+    # only if enabled
+    values:
+      GITHUB_TOKEN: dmFsdWU=
+
+
 
 # the repos to scrape
 configmap:

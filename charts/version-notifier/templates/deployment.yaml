@@ -70,10 +70,16 @@ spec:
               {{ end }}
           envFrom:
             - secretRef:
-                {{- if .Values.secret.name }}
-                  name: {{ .Values.secret.name }}
+                {{- if .Values.secrets.notification.name }}
+                  name: {{ .Values.secrets.notification.name }}
                 {{- else }}
-                  name: {{ .Release.Name }}-secret
+                  name: {{ .Release.Name }}-notification-secret
+                {{- end }}
+            - secretRef:
+                {{- if .Values.secrets.github.name }}
+                name: {{ .Values.secrets.github.name }}
+                {{- else }}
+                name: {{ .Release.Name }}-github-secret
                 {{- end }}
           volumeMounts:
             - name: config

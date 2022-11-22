@@ -123,6 +123,20 @@ func getURL(username, repoName string) string {
 	//return "https://github.com/" + username + "/" + repoName + "/tags.atom"
 }
 
+// getRequest returns a request with all the needed headers
+func getRequest(url string) *http.Request {
+	token, exist := os.LookupEnv("GITHUB_TOKEN")
+	if !exist {
+		log.Panicln("The GITHUB_TOKEN environment variable must be set!")
+	}
+
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("Authorization", token)
+	req.Header.Set("User-Agent", "version-notifier")
+
+	return req
+}
+
 // getLatestTag receives the latest ID (tag) available in the .atom file
 func getLatestTag(data string) string {
 	if LogLevel == "DEBUG" {
@@ -192,8 +206,12 @@ func download(username, repoName string) (*jparser.Container, error) {
 		log.Println("Fetching latest tags from:", url)
 	}
 
+	// initialize request
+	client := &http.Client{}
+	req := getRequest(url)
+
 	// perform the request
-	resp, err := http.Get(url)
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -215,6 +233,8 @@ func download(username, repoName string) (*jparser.Container, error) {
 
 		return parseJSON, nil
 	}
+
+	_ = resp.Body.Close()
 
 	return nil, errors.New("request returned with a non 200 status code")
 }
