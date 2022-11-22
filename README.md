@@ -12,7 +12,7 @@ Download the latest release and deploy it to your Kubernetes cluster </br>
     helm repo add vnotifier https://yuvalpress.github.io/version-notifier
     
     kubectl create ns notifier
-    helm install version-notifier vnotifier/version-notifier -n notifier
+    helm install version-notifier vnotifier/version-notifier -n notifier --set secret.values.SLACK_TOKEN="dmFsdWU=" --set secret.values.SLACK_CHANNEL="dmFsdWU="
   ```
 
 ### Docker Image
