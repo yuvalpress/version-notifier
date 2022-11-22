@@ -271,6 +271,11 @@ func main() {
 
 	log.Printf("Log Level is set for: %s\n", LogLevel)
 
+	log.Println("Core repository versions:")
+	for index, repoData := range anchor.repoList {
+		log.Printf("%v. %v/%v: %v\n", index+1, repoData.User, repoData.Repo, repoData.Latest)
+	}
+
 	log.Println("Done!")
 	log.Println("-----------------------------------------------------")
 
