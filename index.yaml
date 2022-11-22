@@ -2,6 +2,20 @@ apiVersion: v1
 entries:
   version-notifier:
   - apiVersion: v2
+    appVersion: 0.7.5
+    created: "2022-11-22T21:52:55.578393739Z"
+    description: This chart was made to keep every team member updated regarding version
+      of packages charts images and basically whatever is available as a github release
+      (package)
+    digest: e59caa76bdc174229563795cf682b13af62f79b5c381013e9b3d626095c14140
+    maintainers:
+    - email: yuvalpress@gmail.com
+      name: yuval press
+    name: version-notifier
+    urls:
+    - https://github.com/yuvalpress/version-notifier/releases/download/version-notifier-0.7.3/version-notifier-0.7.3.tgz
+    version: 0.7.3
+  - apiVersion: v2
     appVersion: 0.7.4
     created: "2022-11-22T21:15:37.0556529Z"
     description: This chart was made to keep every team member updated regarding version
@@ -722,4 +736,4 @@ entries:
     urls:
     - https://github.com/yuvalpress/version-notifer/releases/download/version-notifier-0.1.0/version-notifier-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-22T21:15:37.059803818Z"
+generated: "2022-11-22T21:52:55.578832045Z"
