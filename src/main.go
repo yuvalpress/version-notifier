@@ -212,7 +212,6 @@ func download(username, repoName string) ([]*jparser.Container, error) {
 	}
 
 	tagsData := parseJSON.Path("feed.entry").Children()
-	log.Println(parseJSON.String())
 
 	if len(tagsData) == 0 {
 		return nil, errors.New("request returned with 0 tags listed")
