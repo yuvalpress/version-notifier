@@ -27,12 +27,35 @@ jobs:
           files: |
             docker.version
 
+  test-go:
+    runs-on: ubuntu-latest
+    needs: validate-bump
+    if: needs.validate-bump.outputs.bumped == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19.3
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Run Tests
+        env:
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: go test -v ./...
+
   docker:
     runs-on: ubuntu-latest
     outputs:
       docker_version: ${{ steps.docker_version.outputs.content }}
-    needs: validate-bump
-    if: needs.validate-bump.outputs.bumped == 'true'
+    needs: test-go
     steps:
       - name: Checkout
         uses: actions/checkout@v3

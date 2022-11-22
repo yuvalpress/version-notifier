@@ -3,6 +3,7 @@ package slack_notifier
 import (
 	"fmt"
 	"github.com/slack-go/slack"
+	"log"
 	"os"
 	"yuvalpress/version-notifier/internal/release_notes"
 )
@@ -17,7 +18,17 @@ var (
 
 // Notify sends a slack message with the supplied data
 func Notify(user, repo, url, oldVer, newVer, updateLevel string, sendFullChangelog bool) {
-	slackClient := slack.New(os.Getenv("SLACK_TOKEN"))
+	slackToken, exists := os.LookupEnv("SLACK_TOKEN")
+	if !exists {
+		log.Panicln("The SLACK_TOKEN environment variable doesn't exist")
+	}
+
+	slackChannel, exists := os.LookupEnv("SLACK_CHANNEL")
+	if !exists {
+		log.Panicln("The SLACK_CHANNEL environment variable doesn't exist")
+	}
+
+	slackClient := slack.New(slackToken)
 
 	attachment := slack.Attachment{
 		Pretext: "New Version Details:",
@@ -27,7 +38,7 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel string, sendFullChangel
 	notes := release_notes.GetReleaseNotes(url, "text")
 	if notes != "" && sendFullChangelog {
 		_, _, err := slackClient.PostMessage(
-			os.Getenv("SLACK_CHANNEL"),
+			slackChannel,
 			slack.MsgOptionAttachments(attachment),
 			slack.MsgOptionBlocks(
 				slack.NewSectionBlock(slack.NewTextBlockObject("mrkdwn", "*New "+updateLevel+" update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false, false), nil, nil),
@@ -40,8 +51,8 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel string, sendFullChangel
 
 	} else {
 		_, _, err := slackClient.PostMessage(
-			os.Getenv("SLACK_CHANNEL"),
-			slack.MsgOptionText("*New"+updateLevel+"update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false),
+			slackChannel,
+			slack.MsgOptionText("*New "+updateLevel+" update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false),
 			slack.MsgOptionAttachments(attachment),
 			slack.MsgOptionUsername("Version Notifier"),
 		)

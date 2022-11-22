@@ -32,6 +32,8 @@ var (
 
 	// Red color for logs
 	Red = "\033[31m"
+
+	LogLevel = os.Getenv("LOG_LEVEL")
 )
 
 // Anchor holds the first initialized information for the service
@@ -122,7 +124,9 @@ func getURL(username, repoName string) string {
 
 // getLatestTag receives the latest ID (tag) available in the .atom file
 func getLatestTag(data *jparser.Container) string {
-	log.Println("Latest tag: v" + findRegexVersion(data.Path("id").String()))
+	if LogLevel == "DEBUG" {
+		log.Println("Latest tag: v" + findRegexVersion(data.Path("id").String()))
+	}
 	return "v" + findRegexVersion(data.Path("id").String())
 }
 
@@ -183,7 +187,9 @@ func readConfigFile() (Conf, error) {
 // download is responsible to fetch the latest data from the relative url
 func download(username, repoName string) ([]*jparser.Container, error) {
 	url := getURL(username, repoName)
-	log.Println("Fetching latest tags from:", url)
+	if LogLevel == "DEBUG" {
+		log.Println("Fetching latest tags from:", url)
+	}
 
 	// perform the request
 	resp, err := http.Get(url)
@@ -278,8 +284,10 @@ func main() {
 					updateLevel := getUpdateLevel(repoData.Latest, newVer)
 
 					if stringInSlice(updateLevel, levels) {
-						log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,
-							updateLevel, repoData.User, repoData.Repo, newVer)
+						if LogLevel == "DEBUG" || LogLevel == "INFO" {
+							log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,
+								updateLevel, repoData.User, repoData.Repo, newVer)
+						}
 
 						// update releases link
 						anchor.repoList[index].URL = strings.ReplaceAll(latest[0].Path("link.-href").String(), "\"", "")
@@ -293,7 +301,9 @@ func main() {
 					anchor.repoList[index].Latest = "v" + newVer
 
 				} else {
-					log.Printf("No new version found for package %v/%v", repoData.User, repoData.Repo)
+					if LogLevel == "DEBUG" {
+						log.Printf("No new version found for package %v/%v", repoData.User, repoData.Repo)
+					}
 				}
 			}
 		}

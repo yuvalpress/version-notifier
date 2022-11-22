@@ -62,6 +62,12 @@ spec:
               {{ else -}}
               value: "false"
               {{ end }}
+            - name: {{ upper "log_level" }}
+              {{ if .Values.application.log_level -}}
+              value: {{ .Values.application.log_level }}
+              {{ else -}}
+              value: "INFO"
+              {{ end }}
           envFrom:
             - secretRef:
                 {{- if .Values.secret.name }}
