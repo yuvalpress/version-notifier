@@ -1,6 +1,6 @@
 apiVersion: v2
 name: version-notifier
-version: 0.7.1
+version: 0.7.2
 appVersion: |-
   0.7.4
 description: "This chart was made to keep every team member updated regarding version of packages charts images and basically whatever is available as a github release (package)"
