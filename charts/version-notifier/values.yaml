@@ -34,7 +34,7 @@ deployment:
 # not recommended to enable the secret as the values need to be hard coded in the chart
 secrets:
   notification:
-    enable: true
+    enable: false
     type: telegram # slack or telegram
     name: version-notifier-notification-secret
 
@@ -48,7 +48,7 @@ secrets:
       TELEGRAM_CHAT_ID: dmFsdWU=
 
   github:
-    enable: true
+    enable: false
     name: version-notifier-github-secret
 
     # only if enabled

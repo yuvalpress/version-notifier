@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 // getRequest returns a request with all the needed headers
@@ -57,7 +58,19 @@ func APIRequest(url, LogLevel string) (*jparser.Container, error) {
 		return parseJSON, nil
 	}
 
+	if resp.StatusCode == http.StatusForbidden {
+		r, _ := io.ReadAll(resp.Body)
+		json, err := jparser.ParseJSON(r)
+		if err != nil {
+			return nil, err
+		}
+
+		err = errors.New("request returned a 403 status code with the following message:\n" + json.Path("message").String())
+
+		return nil, err
+	}
+
 	_ = resp.Body.Close()
 
-	return nil, errors.New("request returned with a non 200 status code")
+	return nil, errors.New("request returned with a " + strconv.Itoa(resp.StatusCode) + "status code.")
 }
