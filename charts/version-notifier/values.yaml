@@ -19,7 +19,7 @@ deployment:
       image:
         image: yuvalpress/version-notifier
         # if tag not set, will default to the chart's appVersion
-#        tag: latest
+        #        tag: latest
         imagePullPolicy: IfNotPresent
 
       resources:
@@ -31,30 +31,20 @@ deployment:
           cpu: "250"
 
 # not recommended to enable the secret as the values need to be hard coded in the chart
-secrets:
-  notification:
-    enable: enable
-    type: telegram # slack or telegram
-    name: version-notifier-notification-secret
+secret:
+  enable: enable
+  type: telegram # slack or telegram
+  name: version-notifier-secret
 
-    # only if enabled
-    values:
-      # only if type is slack
-      SLACK_TOKEN: dmFsdWU=
-      SLACK_CHANNEL: dmFsdWU=
-      # only if type is telegram
-      TELEGRAM_TOKEN: dmFsdWU=
-      TELEGRAM_CHAT_ID: dmFsdWU=
-
-  github:
-    enable: enable
-    name: version-notifier-github-secret
-
-    # only if enabled
-    values:
-      GITHUB_TOKEN: dmFsdWU=
-
-
+  # only if enabled
+  # NOTE - set values to a base64 form of your required value
+  values:
+    # only if type is slack
+    SLACK_TOKEN: dmFsdWU=
+    SLACK_CHANNEL: dmFsdWU=
+    # only if type is telegram
+    TELEGRAM_TOKEN: dmFsdWU=
+    TELEGRAM_CHAT_ID: dmFsdWU=
 
 # the repos to scrape
 configmap:
@@ -62,4 +52,3 @@ configmap:
     - yuvalpress: version-notifier
     - hashicorp: terraform-provider-aws
     - hashicorp: terraform-provider-google
-
