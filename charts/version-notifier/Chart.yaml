@@ -2,7 +2,7 @@ apiVersion: v2
 name: version-notifier
 version: 0.7.8
 appVersion: |-
-  0.8.0
+  0.8.1
 description: "This chart was made to keep every team member updated regarding version of packages charts images and basically whatever is available as a github release (package)"
 maintainers:
   - name: yuval press
