@@ -3,7 +3,7 @@ package main
 
 import (
 	"errors"
-	"io"
+	xj "github.com/basgys/goxml2json"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -68,15 +68,15 @@ func (a *Anchor) init() bool {
 				log.Fatalf("Failed during initialization process with the following error: %v", err)
 			}
 
-			if data.Path("tag_name").String() == "" {
+			if len(data) == 0 {
 				return false
 			}
 
 			a.repoList = append(a.repoList, Latest{
 				User:   username,
 				Repo:   repoName,
-				Latest: getLatestTag(data.Path("tag_name").String()),
-				URL:    strings.ReplaceAll(data.Path("html_url").String(), "\"", ""),
+				Latest: getLatestTag(data[0]),
+				URL:    strings.ReplaceAll(data[0].Path("link.-href").String(), "\"", ""),
 			})
 		}
 	}
@@ -119,30 +119,15 @@ func levelsToNotify() []string {
 
 // getURL build the github url with the needed user and repo
 func getURL(username, repoName string) string {
-	return "https://api.github.com/repos/" + username + "/" + repoName + "/releases/latest"
-	//return "https://github.com/" + username + "/" + repoName + "/tags.atom"
-}
-
-// getRequest returns a request with all the needed headers
-func getRequest(url string) *http.Request {
-	token, exist := os.LookupEnv("GITHUB_TOKEN")
-	if !exist {
-		log.Panicln("The GITHUB_TOKEN environment variable must be set!")
-	}
-
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("Authorization", token)
-	req.Header.Set("User-Agent", "version-notifier")
-
-	return req
+	return "https://github.com/" + username + "/" + repoName + "/tags.atom"
 }
 
 // getLatestTag receives the latest ID (tag) available in the .atom file
-func getLatestTag(data string) string {
+func getLatestTag(data *jparser.Container) string {
 	if LogLevel == "DEBUG" {
-		log.Println("Latest tag: v" + findRegexVersion(data))
+		log.Println("Latest tag: v" + findRegexVersion(data.Path("id").String()))
 	}
-	return "v" + findRegexVersion(data)
+	return "v" + findRegexVersion(data.Path("id").String())
 }
 
 // getUpdateLevel returns the update level: Major, Minor, Patch
@@ -200,43 +185,39 @@ func readConfigFile() (Conf, error) {
 }
 
 // download is responsible to fetch the latest data from the relative url
-func download(username, repoName string) (*jparser.Container, error) {
+func download(username, repoName string) ([]*jparser.Container, error) {
 	url := getURL(username, repoName)
 	if LogLevel == "DEBUG" {
 		log.Println("Fetching latest tags from:", url)
 	}
 
-	// initialize request
-	client := &http.Client{}
-	req := getRequest(url)
-
 	// perform the request
-	resp, err := client.Do(req)
+	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
 
-	// convert to []byte
-	if resp.StatusCode == http.StatusOK {
-		bodyBytes, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return nil, err
-		}
-
-		_ = resp.Body.Close()
-
-		// load json to container object
-		parseJSON, err := jparser.ParseJSON(bodyBytes)
-		if err != nil {
-			return nil, err
-		}
-
-		return parseJSON, nil
+	// convert XML to json
+	json, err := xj.Convert(resp.Body)
+	if err != nil {
+		return nil, err
 	}
 
 	_ = resp.Body.Close()
 
-	return nil, errors.New("request returned with a non 200 status code")
+	// load json to container object
+	parseJSON, err := jparser.ParseJSON(json.Bytes())
+	if err != nil {
+		return nil, err
+	}
+
+	tagsData := parseJSON.Path("feed.entry").Children()
+
+	if len(tagsData) == 0 {
+		return nil, errors.New("request returned with 0 tags listed")
+	}
+
+	return tagsData, nil
 }
 
 // notify is responsible for notifying a selected Slack channel.
@@ -307,8 +288,8 @@ func main() {
 				log.Printf(Red+"Failed scraping %v: %v"+Reset, repoData.User+"/"+repoData.Repo, err)
 			}
 
-			if latest.Path("tag_name").String() != "" {
-				result, newVer := doesNewTagExist(repoData.Latest, getLatestTag(latest.Path("tag_name").String()), repoData.User+"/"+repoData.Repo)
+			if latest != nil {
+				result, newVer := doesNewTagExist(repoData.Latest, getLatestTag(latest[0]), repoData.User+"/"+repoData.Repo)
 
 				if result {
 					updateLevel := getUpdateLevel(repoData.Latest, newVer)
@@ -320,7 +301,7 @@ func main() {
 						}
 
 						// update releases link
-						anchor.repoList[index].URL = strings.ReplaceAll(latest.Path("html_url").String(), "\"", "")
+						anchor.repoList[index].URL = strings.ReplaceAll(latest[0].Path("link.-href").String(), "\"", "")
 
 						// notify slack_notifier channel
 						notify(repoData.User, repoData.Repo, anchor.repoList[index].URL, repoData.Latest, "v"+newVer)
