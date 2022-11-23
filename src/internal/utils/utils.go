@@ -104,13 +104,14 @@ func LevelsToNotify() []string {
 	return strings.Split(levels, ",")
 }
 
-// ConvertStrToInt converts a string to int
-func ConvertStrToInt(str string) int {
-	intVar, err := strconv.Atoi(str)
+// GetInterval returns the interval to use on run
+func GetInterval() (string, int) {
+	interval := os.Getenv("INTERVAL")
+	intInterval, err := strconv.Atoi(interval)
 	if err != nil {
-		log.Println(Red + "Wrong INTERVAL environment variable inserted, defaulting to 1 hour" + Reset)
-		return 3600
+		log.Println(Red + "Wrong INTERVAL environment variable inserted, defaulting to 20 min" + Reset)
+		return "20", 20
 	}
 
-	return intVar
+	return interval, intInterval
 }

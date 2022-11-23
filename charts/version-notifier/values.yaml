@@ -3,6 +3,7 @@ application:
   notification_method: "none" # telegram or slack - must be set
   send_full_changelog: "false"
   log_level: "INFO" # DEBUG or INFO
+  interval: "20"
 
 deployment:
   metadata:
@@ -19,7 +20,7 @@ deployment:
       image:
         image: yuvalpress/version-notifier
         # if tag not set, will default to the chart's appVersion
-        #        tag: latest
+#        tag: latest
         imagePullPolicy: IfNotPresent
 
       resources:
@@ -33,7 +34,7 @@ deployment:
 # not recommended to enable the secret as the values need to be hard coded in the chart
 secrets:
   notification:
-    enable: disabled
+    enable: true
     type: telegram # slack or telegram
     name: version-notifier-notification-secret
 
@@ -47,7 +48,7 @@ secrets:
       TELEGRAM_CHAT_ID: dmFsdWU=
 
   github:
-    enable: disabled
+    enable: true
     name: version-notifier-github-secret
 
     # only if enabled

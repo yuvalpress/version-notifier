@@ -52,21 +52,27 @@ spec:
             {{ end }}
             - name: {{ upper "notification_method" }}
               {{ if .Values.application.notification_method -}}
-              value: {{ .Values.application.notification_method }}
+              value: {{ .Values.application.notification_method | quote }}
               {{ else -}}
               value: "none"
               {{ end }}
             - name: {{ upper "send_full_changelog" }}
               {{ if .Values.application.send_full_changelog -}}
-              value: {{ .Values.application.send_full_changelog }}
+              value: {{ .Values.application.send_full_changelog | quote }}
               {{ else -}}
               value: "false"
               {{ end }}
             - name: {{ upper "log_level" }}
               {{ if .Values.application.log_level -}}
-              value: {{ .Values.application.log_level }}
+              value: {{ .Values.application.log_level | quote }}
               {{ else -}}
               value: "INFO"
+              {{ end }}
+            - name: {{ upper "interval" }}
+              {{ if .Values.application.interval -}}
+              value: {{ .Values.application.interval | quote }}
+              {{ else -}}
+              value: "20"
               {{ end }}
           envFrom:
             - secretRef:

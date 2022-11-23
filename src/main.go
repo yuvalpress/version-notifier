@@ -159,12 +159,8 @@ func main() {
 
 	log.Printf("Log Level is set for: %s\n", LogLevel)
 
-	interval, exist := os.LookupEnv("INTERVAL")
-	if !exist {
-		log.Printf("Interval is set to: %s\n", "3600")
-	} else {
-		log.Printf("Interval is set to: %s\n", interval)
-	}
+	interval, intInterval := utils.GetInterval()
+	log.Printf("Interval is set to: %s minutes\n", interval)
 
 	log.Println("Core repository versions:")
 	for _, repoData := range anchor.repoList {
@@ -177,7 +173,7 @@ func main() {
 	// loop to infinity
 	for true {
 		//set interval to run every hour
-		time.Sleep(time.Duration(utils.ConvertStrToInt(interval)) * time.Second)
+		time.Sleep(time.Duration(intInterval) * time.Minute)
 		for index, repoData := range anchor.repoList {
 			latest, err := getVersion(repoData.User, repoData.Repo)
 			if err != nil {
