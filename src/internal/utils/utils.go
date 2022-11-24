@@ -122,8 +122,8 @@ func WaitForInterval() {
 	_, intInterval := GetInterval()
 	//set interval to run every <interval>
 	for i := intInterval; i > 0; i-- {
+		fmt.Printf("\r%v Performing next request in: %d minutes", time.Now().Format("2006/1/2 15:04:05"), i)
 		for s := 1; s <= 60; s++ {
-			fmt.Printf("\r%v Performing next request in: %d minutes", time.Now().Format("2006/1/2 15:04:05"), i)
 			time.Sleep(1 * time.Second)
 		}
 	}
