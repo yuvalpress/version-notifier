@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"github.com/Masterminds/semver/v3"
 	validate "golang.org/x/mod/semver"
 	"log"
@@ -118,14 +117,12 @@ func GetInterval() (string, int) {
 	return interval, intInterval
 }
 
+// WaitForInterval is responsible for waiting the interval requested by the user
 func WaitForInterval() {
-	_, intInterval := GetInterval()
-	//set interval to run every <interval>
-	for i := intInterval; i > 0; i-- {
-		fmt.Printf("\r%v Performing next request in: %d minutes", time.Now().Format("2006/1/2 15:04:05"), i)
-		for s := 1; s <= 60; s++ {
-			time.Sleep(1 * time.Second)
-		}
-	}
-	fmt.Print("\n")
+	strInterval, intInterval := GetInterval()
+	log.Println("Performing next request in: " + strInterval + " minutes.")
+
+	//wait <interval> minutes for next run
+	time.Sleep(time.Duration(intInterval) * time.Minute)
+	log.Println("Starting new run...")
 }
