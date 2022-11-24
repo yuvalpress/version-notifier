@@ -196,6 +196,7 @@ func main() {
 
 				if result {
 					updateLevel := utils.GetUpdateLevel(repoData.Latest, newVer)
+
 					if utils.StringInSlice(updateLevel, levels) {
 						if LogLevel == "DEBUG" || LogLevel == "INFO" {
 							log.Printf(Green+"New %v version found for package %v/%v: %v\n"+Reset,

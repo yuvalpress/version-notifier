@@ -15,9 +15,6 @@ var (
 	// Reset color variables after call
 	Reset = "\033[0m"
 
-	// Green color for logs
-	Green = "\033[32m"
-
 	// Red color for logs
 	Red = "\033[31m"
 )
@@ -55,7 +52,7 @@ func FindRegexVersion(version string) string {
 // StringInSlice returns true if string in list
 func StringInSlice(level string, list []string) bool {
 	for _, value := range list {
-		if value == level {
+		if strings.TrimSpace(value) == strings.TrimSpace(level) {
 			return true
 		}
 	}
@@ -110,7 +107,7 @@ func GetInterval() (string, int) {
 	interval := os.Getenv("INTERVAL")
 	intInterval, err := strconv.Atoi(interval)
 	if err != nil {
-		log.Println(Red + "Wrong INTERVAL environment variable inserted, defaulting to 20 min" + Reset)
+		log.Println(Red + "Wrong INTERVAL environment variable inserted, defaulting to 30 min" + Reset)
 		return "30", 30
 	}
 
