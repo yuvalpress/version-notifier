@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/Masterminds/semver/v3"
 	validate "golang.org/x/mod/semver"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var (
@@ -110,8 +112,20 @@ func GetInterval() (string, int) {
 	intInterval, err := strconv.Atoi(interval)
 	if err != nil {
 		log.Println(Red + "Wrong INTERVAL environment variable inserted, defaulting to 20 min" + Reset)
-		return "20", 20
+		return "30", 30
 	}
 
 	return interval, intInterval
+}
+
+func WaitForInterval() {
+	_, intInterval := GetInterval()
+	//set interval to run every <interval>
+	for i := intInterval; i > 0; i-- {
+		for s := 1; s <= 60; s++ {
+			fmt.Printf("\r%v Performing next request in: %d minutes", time.Now().Format("2006/1/2 15:04:05"), i)
+			time.Sleep(1 * time.Second)
+		}
+	}
+	fmt.Print("\n")
 }

@@ -163,7 +163,7 @@ func main() {
 
 	log.Printf("Log Level is set for: %s\n", LogLevel)
 
-	interval, intInterval := utils.GetInterval()
+	interval, _ := utils.GetInterval()
 	log.Printf("Interval is set to: %s minutes\n", interval)
 
 	if len(anchor.repoList) != 0 {
@@ -184,8 +184,7 @@ func main() {
 
 	// loop to infinity
 	for true {
-		//set interval to run every hour
-		time.Sleep(time.Duration(intInterval) * time.Minute)
+		utils.WaitForInterval()
 		for index, repoData := range anchor.repoList {
 			latest, err := getVersion(repoData.User, repoData.Repo)
 			if err != nil {
