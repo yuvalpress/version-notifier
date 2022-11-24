@@ -19,7 +19,7 @@ func getRequest(url string) *http.Request {
 
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Barer "+token)
+	req.Header.Set("Authorization", "Bearer "+token)
 	req.Header.Set("User-Agent", "version-notifier")
 
 	return req
