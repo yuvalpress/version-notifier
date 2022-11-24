@@ -2,3 +2,4 @@ repos:
   - yuvalpress: version-notifier
   - hashicorp: terraform-provider-aws
   - hashicorp: terraform-provider-google
+  - kubernetes: kubectl

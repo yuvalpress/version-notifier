@@ -61,12 +61,16 @@ func (a *Anchor) init() bool {
 		for username, repoName := range info {
 			data, err := getVersion(username, repoName)
 			if err != nil {
-				log.Fatalf("Failed during initialization process with the following error: %v", err)
+				log.Printf("Failed getting latest release of "+username+"/"+repoName+" with the following error: "+Red+"%v"+Reset, err)
+				log.Println("Skipping..")
+				continue
 			}
 
 			if data.Path("tag_name").String() == "" {
 				return false
 			}
+
+			log.Println("Fetched latest release of: " + username + "/" + repoName)
 
 			a.repoList = append(a.repoList, Latest{
 				User:   username,
@@ -162,13 +166,21 @@ func main() {
 	interval, intInterval := utils.GetInterval()
 	log.Printf("Interval is set to: %s minutes\n", interval)
 
-	log.Println("Core repository versions:")
+	if len(anchor.repoList) != 0 {
+		log.Println("Core repository versions:")
+	}
 	for _, repoData := range anchor.repoList {
 		log.Printf("    %v/%v: %v\n", repoData.User, repoData.Repo, repoData.Latest)
 	}
 
 	log.Println("Done!")
 	log.Println("-----------------------------------------------------")
+
+	// check if there are repos to scrape
+	if len(anchor.repoList) == 0 {
+		log.Println(Red + "No repos to scrape... exiting" + Reset)
+		os.Exit(1)
+	}
 
 	// loop to infinity
 	for true {

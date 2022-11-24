@@ -18,7 +18,8 @@ func getRequest(url string) *http.Request {
 	}
 
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("Authorization", token)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Barer "+token)
 	req.Header.Set("User-Agent", "version-notifier")
 
 	return req
@@ -27,7 +28,7 @@ func getRequest(url string) *http.Request {
 // APIRequest uses a GitHub oauth token to retrieve needed data
 func APIRequest(url, LogLevel string) (*jparser.Container, error) {
 	if LogLevel == "DEBUG" {
-		log.Println("Fetching latest tags from:", url)
+		log.Println("Fetching latest release from:", url)
 	}
 
 	// initialize request
@@ -58,19 +59,13 @@ func APIRequest(url, LogLevel string) (*jparser.Container, error) {
 		return parseJSON, nil
 	}
 
-	if resp.StatusCode == http.StatusForbidden {
-		r, _ := io.ReadAll(resp.Body)
-		json, err := jparser.ParseJSON(r)
-		if err != nil {
-			return nil, err
-		}
-
-		err = errors.New("request returned a 403 status code with the following message:\n" + json.Path("message").String())
-
+	r, _ := io.ReadAll(resp.Body)
+	json, err := jparser.ParseJSON(r)
+	if err != nil {
 		return nil, err
 	}
 
 	_ = resp.Body.Close()
 
-	return nil, errors.New("request returned with a " + strconv.Itoa(resp.StatusCode) + "status code.")
+	return nil, errors.New(strconv.Itoa(resp.StatusCode) + ": request returned with the following message: " + json.Path("message").String())
 }
