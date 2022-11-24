@@ -3,6 +3,21 @@ entries:
   version-notifier:
   - apiVersion: v2
     appVersion: 1.0.3
+    created: "2022-11-24T16:23:24.668442599Z"
+    description: Version Notifier is a modern solution for the "being notified" aspect
+      of each Techy's day-to-day work. By using it, you'll be notified for any new
+      global GitHub repository release you choose, directly to your Slack / Telegram
+      channel.
+    digest: e0c361e594ba6e0fb4d0384662f567566847e6c5b5955b877b93e63b5cae9f0c
+    maintainers:
+    - email: yuvalpress@gmail.com
+      name: yuval press
+    name: version-notifier
+    urls:
+    - https://github.com/yuvalpress/version-notifier/releases/download/version-notifier-0.10.4/version-notifier-0.10.4.tgz
+    version: 0.10.4
+  - apiVersion: v2
+    appVersion: 1.0.3
     created: "2022-11-24T15:55:44.795700985Z"
     description: This chart was made to keep every team member updated regarding version
       of packages charts images and basically whatever is available as a github release
@@ -904,4 +919,4 @@ entries:
     urls:
     - https://github.com/yuvalpress/version-notifer/releases/download/version-notifier-0.1.0/version-notifier-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-24T15:55:44.796810499Z"
+generated: "2022-11-24T16:23:24.66903013Z"
