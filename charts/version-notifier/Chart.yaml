@@ -1,6 +1,6 @@
 apiVersion: v2
 name: version-notifier
-version: 0.11.0
+version: 0.11.1
 appVersion: 1.1.0
 description: "Version Notifier is a modern solution for the \"being notified\" aspect of each Techy's day-to-day work. By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack / Telegram channel."
 maintainers:
