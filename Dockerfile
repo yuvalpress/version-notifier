@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY ./src ./
 
+ENV GOTRACEBACK "none"
+
 RUN go mod download
 RUN go build -o /version-notifier
 

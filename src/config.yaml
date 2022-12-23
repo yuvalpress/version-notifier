@@ -1,5 +1,6 @@
 repos:
-  - yuvalpress: version-notifier
-  - hashicorp: terraform-provider-aws
-  - hashicorp: terraform-provider-google
-  - kubernetes: kubectl
+#  - yuvalpress: version-notifier
+  - yuvalpress: test
+#  - hashicorp: terraform-provider-aws
+#  - hashicorp: terraform-provider-google
+#  - kubernetes: kubectl

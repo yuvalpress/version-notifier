@@ -129,12 +129,10 @@ pod=$(kubectl get pods -n notifier -l app=version-notifier -o yaml | yq '.items[
 ```
 
 ## Upcoming Features ✨
-* Support for more notification methods (currently Slack only).
 * Support more than one notification method at a time.
 * Add support for Pypi repositories
-* Add support for private GitHub repositories
 * Add support for Docker Images in Dockerhub
-<br>
+
 ## Want to contribute? 💻
 PR's are more than welcome!
 
