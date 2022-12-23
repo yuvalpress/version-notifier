@@ -3,7 +3,7 @@
 🕷 **Version Notifier** - your Friendly Neighborhood Spiderman, only geekier 🤓
 
 Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
-</br>By using it, you'll be notified for any new global GitHub repository release you choose, directly to your Slack / Telegram channel.</br></br>
+</br>By using it, you'll be notified for any new global GitHub repository release or tag you choose, directly to your Slack / Telegram channel.</br></br>
 ![Architecture](./docs/service.png)
 
 ## NOTE ⚠️
