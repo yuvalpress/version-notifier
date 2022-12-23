@@ -17,7 +17,7 @@ var (
 )
 
 // Notify sends a slack message with the supplied data
-func Notify(user, repo, url, oldVer, newVer, updateLevel string, sendFullChangelog bool) {
+func Notify(user, repo, url, oldVer, newVer, updateLevel, versionType string, sendFullChangelog bool) {
 	slackToken, exists := os.LookupEnv("SLACK_TOKEN")
 	if !exists {
 		log.Panicln("The SLACK_TOKEN environment variable doesn't exist")
@@ -37,28 +37,52 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel string, sendFullChangel
 
 	notes := release_notes.GetReleaseNotes(url, "text")
 	if notes != "" && sendFullChangelog {
-		_, _, err := slackClient.PostMessage(
-			slackChannel,
-			slack.MsgOptionAttachments(attachment),
-			slack.MsgOptionBlocks(
-				slack.NewSectionBlock(slack.NewTextBlockObject("mrkdwn", "*New "+updateLevel+" update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false, false), nil, nil),
-				slack.NewSectionBlock(slack.NewTextBlockObject("plain_text", notes, false, false), nil, nil)))
+		if versionType == "release" {
+			_, _, err := slackClient.PostMessage(
+				slackChannel,
+				slack.MsgOptionAttachments(attachment),
+				slack.MsgOptionBlocks(
+					slack.NewSectionBlock(slack.NewTextBlockObject("mrkdwn", "*New "+updateLevel+" update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false, false), nil, nil),
+					slack.NewSectionBlock(slack.NewTextBlockObject("plain_text", notes, false, false), nil, nil)))
 
-		if err != nil {
-			fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
-			return
+			if err != nil {
+				fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
+				return
+			}
+		} else {
+			_, _, err := slackClient.PostMessage(
+				slackChannel,
+				slack.MsgOptionBlocks(
+					slack.NewSectionBlock(slack.NewTextBlockObject("mrkdwn", "*New "+updateLevel+" update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false, false), nil, nil)))
+
+			if err != nil {
+				fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
+				return
+			}
 		}
 
 	} else {
-		_, _, err := slackClient.PostMessage(
-			slackChannel,
-			slack.MsgOptionText("*New "+updateLevel+" update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false),
-			slack.MsgOptionAttachments(attachment),
-			slack.MsgOptionUsername("Version Notifier"),
-		)
-		if err != nil {
-			fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
-			return
+		if versionType == "release" {
+			_, _, err := slackClient.PostMessage(
+				slackChannel,
+				slack.MsgOptionText("*New "+updateLevel+" update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false),
+				slack.MsgOptionAttachments(attachment),
+				slack.MsgOptionUsername("Version Notifier"),
+			)
+			if err != nil {
+				fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
+				return
+			}
+		} else {
+			_, _, err := slackClient.PostMessage(
+				slackChannel,
+				slack.MsgOptionText("*New "+updateLevel+" update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false),
+				slack.MsgOptionUsername("Version Notifier"),
+			)
+			if err != nil {
+				fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
+				return
+			}
 		}
 	}
 }

@@ -112,7 +112,7 @@ func main() {
 						anchor.RepoList[index].URL = newURL
 
 						// notify slack_notifier channel
-						utils.Notify(repoData.User, repoData.Repo, anchor.RepoList[index].URL, repoData.Latest, "v"+newVer)
+						utils.Notify(repoData.User, repoData.Repo, anchor.RepoList[index].URL, repoData.Latest, "v"+newVer, requestType)
 
 					}
 

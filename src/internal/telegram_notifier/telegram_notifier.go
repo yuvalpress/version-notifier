@@ -53,7 +53,7 @@ func sendReleaseNotes(bot *tg.BotAPI, msg tg.MessageConfig, url string) {
 }
 
 // Notify notifies the telegram channel given in context
-func Notify(user, repo, url, oldVer, newVer, updateLevel string, sendFullChangelog bool) {
+func Notify(user, repo, url, oldVer, newVer, updateLevel, versionType string, sendFullChangelog bool) {
 	// configure bot and chatID
 	bot, _ := getBot()
 	chatID, exists := os.LookupEnv("TELEGRAM_CHAT_ID")
@@ -75,9 +75,14 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel string, sendFullChangel
 	// send message
 	if sendFullChangelog {
 		sendMessage(bot, msg)
-		sendReleaseNotes(bot, msg, url)
+		if versionType == "release" {
+			sendReleaseNotes(bot, msg, url)
+		}
+
 	} else {
-		msg.Text = msg.Text + "\n\n" + "*New Version Details:*\n" + url
+		if versionType == "release" {
+			msg.Text = msg.Text + "\n\n" + "*New Version Details:*\n" + url
+		}
 		sendMessage(bot, msg)
 	}
 }

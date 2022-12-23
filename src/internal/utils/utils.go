@@ -137,7 +137,7 @@ func GetVersion(username, repoName string) (*jparser.Container, string, error) {
 
 // Notify is responsible for notifying a selected Slack channel.
 // in the future, more methods will be added
-func Notify(user, repo, url, oldVer, newVer string) {
+func Notify(user, repo, url, oldVer, newVer, versionType string) {
 	method, found := os.LookupEnv("NOTIFICATION_METHOD")
 	if !found {
 		log.Panicln("The NOTIFICATION_METHOD environment variable must be set!")
@@ -146,6 +146,7 @@ func Notify(user, repo, url, oldVer, newVer string) {
 	sendFullChangelog, found := os.LookupEnv("SEND_FULL_CHANGELOG")
 	if !found {
 		log.Println("The SEND_FULL_CHANGELOG environment variable is not set! Defaulting to `false`")
+		sendFullChangelog = "false"
 	}
 
 	// convert to bool
@@ -158,9 +159,9 @@ func Notify(user, repo, url, oldVer, newVer string) {
 		log.Panicln("The NOTIFICATION_METHOD environment variable must be set!")
 
 	} else if method == "telegram" {
-		telegram_notifier.Notify(user, repo, url, oldVer, newVer, GetUpdateLevel(oldVer, newVer), sendBool)
+		telegram_notifier.Notify(user, repo, url, oldVer, newVer, GetUpdateLevel(oldVer, newVer), versionType, sendBool)
 
 	} else if method == "slack" {
-		slack_notifier.Notify(user, repo, url, oldVer, newVer, GetUpdateLevel(oldVer, newVer), sendBool)
+		slack_notifier.Notify(user, repo, url, oldVer, newVer, GetUpdateLevel(oldVer, newVer), versionType, sendBool)
 	}
 }
