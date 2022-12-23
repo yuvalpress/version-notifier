@@ -1,6 +1,7 @@
 package utils
 
 import (
+	jparser "github.com/Jeffail/gabs/v2"
 	"github.com/Masterminds/semver/v3"
 	validate "golang.org/x/mod/semver"
 	"log"
@@ -9,6 +10,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"yuvalpress/version-notifier/internal/scraper"
+	"yuvalpress/version-notifier/internal/slack_notifier"
+	"yuvalpress/version-notifier/internal/telegram_notifier"
 )
 
 var (
@@ -17,12 +21,9 @@ var (
 
 	// Red color for logs
 	Red = "\033[31m"
-)
 
-// GetURL build the GitHub url with the needed user and repo
-func GetURL(username, repoName string) string {
-	return "https://api.github.com/repos/" + username + "/" + repoName + "/releases/latest"
-}
+	LogLevel = os.Getenv("LOG_LEVEL")
+)
 
 // GetUpdateLevel returns the update level: Major, Minor, Patch
 // no need to validate this are semantic version formatted as this portion of the code is executed only after a test
@@ -122,4 +123,44 @@ func WaitForInterval() {
 	//wait <interval> minutes for next run
 	time.Sleep(time.Duration(intInterval) * time.Minute)
 	log.Println("Starting new run...")
+}
+
+// GetVersion is responsible to fetch the latest data from the relative url
+func GetVersion(username, repoName string) (*jparser.Container, string, error) {
+	json, requestType, err := scraper.APIRequest(username, repoName, LogLevel)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return json, requestType, nil
+}
+
+// Notify is responsible for notifying a selected Slack channel.
+// in the future, more methods will be added
+func Notify(user, repo, url, oldVer, newVer string) {
+	method, found := os.LookupEnv("NOTIFICATION_METHOD")
+	if !found {
+		log.Panicln("The NOTIFICATION_METHOD environment variable must be set!")
+	}
+
+	sendFullChangelog, found := os.LookupEnv("SEND_FULL_CHANGELOG")
+	if !found {
+		log.Println("The SEND_FULL_CHANGELOG environment variable is not set! Defaulting to `false`")
+	}
+
+	// convert to bool
+	sendBool, err := strconv.ParseBool(sendFullChangelog)
+	if err != nil {
+		log.Panicf("The SEND_FULL_CHANGELOG environment variable must be set to true or false only!")
+	}
+
+	if method == "none" {
+		log.Panicln("The NOTIFICATION_METHOD environment variable must be set!")
+
+	} else if method == "telegram" {
+		telegram_notifier.Notify(user, repo, url, oldVer, newVer, GetUpdateLevel(oldVer, newVer), sendBool)
+
+	} else if method == "slack" {
+		slack_notifier.Notify(user, repo, url, oldVer, newVer, GetUpdateLevel(oldVer, newVer), sendBool)
+	}
 }
