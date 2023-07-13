@@ -4,14 +4,14 @@ import (
 	"testing"
 )
 
-func TestTelegramNotify(t *testing.T) {
+func TestSlackNotify(t *testing.T) {
 	Notify("google",
 		"go-github",
 		"https://github.com/google/go-github/releases/tag/v48.1.0",
 		"v48.0.0", "v48.1.0", "minor", "release", false)
 }
 
-func TestTelegramNotifyWithRelease(t *testing.T) {
+func TestSlackNotifyWithRelease(t *testing.T) {
 	Notify("google",
 		"go-github",
 		"https://github.com/google/go-github/releases/tag/v48.1.0",
