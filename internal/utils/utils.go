@@ -76,14 +76,14 @@ func DoesNewTagExist(old, new string, repo string) (bool, string) {
 		return false, ""
 	}
 
-	log.Printf(Red+"Something went wrong while trying to parse latest version from %v"+Reset, repo)
+	log.Printf(Red+"INFO: Something went wrong while trying to parse latest version from %v"+Reset, repo)
 	return false, ""
 }
 
 // GetLatestTag receives the latest ID (tag) available in the .atom file
 func GetLatestTag(data, LogLevel string) string {
 	if LogLevel == "DEBUG" {
-		log.Println("Latest tag: v" + FindRegexVersion(data))
+		log.Println("DEBUG: Latest tag: v" + FindRegexVersion(data))
 	}
 	return "v" + FindRegexVersion(data)
 }
@@ -123,7 +123,7 @@ func Notify(user, repo, url, oldVer, newVer, versionType string) {
 
 	sendFullChangelog, found := os.LookupEnv("SEND_FULL_CHANGELOG")
 	if !found {
-		log.Println("The SEND_FULL_CHANGELOG environment variable is not set! Defaulting to `false`")
+		log.Println("INFO: The SEND_FULL_CHANGELOG environment variable is not set! Defaulting to `false`.")
 		sendFullChangelog = "false"
 	}
 

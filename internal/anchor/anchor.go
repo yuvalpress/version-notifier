@@ -61,7 +61,7 @@ func (a *Anchor) Init() {
 			log.Println("INFO: Iterating over the " + ownerName + "/" + project + ":" + version + " project")
 			data, requestType, err := utils.GetVersion(ownerName, project)
 			if err != nil {
-				log.Printf("Failed getting latest release of "+ownerName+"/"+project+" with the following error: "+Red+"%v"+Reset, err)
+				log.Printf("ERROR: Failed getting latest release of "+ownerName+"/"+project+" with the following error: "+Red+"%v"+Reset, err)
 				os.Exit(1)
 			}
 
@@ -69,7 +69,7 @@ func (a *Anchor) Init() {
 				os.Exit(1)
 			}
 
-			log.Println("Fetched latest asset of: " + ownerName + "/" + project)
+			log.Println("INFO: Fetched latest asset of: " + ownerName + "/" + project)
 
 			latest := Latest{}
 			latest.init(requestType, ownerName, project, data)

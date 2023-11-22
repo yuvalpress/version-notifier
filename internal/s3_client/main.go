@@ -3,12 +3,11 @@ package s3_client
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"io"
 	"log"
 	"os"
 
-	"sirrend/version-notifier/internal/commons"
+	"sirrend/internal/commons"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -21,16 +20,8 @@ type S3Client struct {
 
 // New creates a new instance of S3Client.
 func New() (*S3Client, error) {
-	profile, err := getAWSVariables()
-	if err != nil {
-		return nil, err
-	}
-
-	sess, err := session.NewSessionWithOptions(session.Options{
-		Profile: profile,
-		Config: aws.Config{
-			Region: aws.String(commons.REGION),
-		},
+	sess, err := session.NewSession(&aws.Config{
+		Region: aws.String(commons.REGION),
 	})
 	if err != nil {
 		log.Println("Error: Could not create a session, some configs are missing.")
@@ -38,15 +29,6 @@ func New() (*S3Client, error) {
 	}
 
 	return &S3Client{client: s3.New(sess)}, nil
-}
-
-// getAWSVariables retrieves the AWS_PROFILE environment variable.
-func getAWSVariables() (string, error) {
-	profile, ok := os.LookupEnv("AWS_PROFILE")
-	if !ok {
-		return "", errors.New("AWS_PROFILE environment variable is not set")
-	}
-	return profile, nil
 }
 
 // Client returns the internal s3.S3 client.
@@ -82,7 +64,7 @@ func (c S3Client) getObject(fileName string, outputFile string) error {
 func (c S3Client) UpdateObject(file interface{}, fileName string) error {
 	jsonBytes, err := json.Marshal(file)
 	if err != nil {
-		log.Println("File failed to convert into a json")
+		log.Println("ERROR: File failed to convert into a json")
 		return err
 	}
 
@@ -95,9 +77,10 @@ func (c S3Client) UpdateObject(file interface{}, fileName string) error {
 	})
 	if err != nil {
 		log.Println("Error: File failed to upload. Check if all values are configured properly.")
+		log.Println(err)
 		return err
 	}
-	log.Println("File uploaded successfully")
+	log.Println("INFO: File uploaded successfully!")
 	return nil
 }
 
@@ -109,9 +92,9 @@ func (c S3Client) removeObject(fileName string) error {
 		Key:    aws.String(fileName),
 	})
 	if err != nil {
-		log.Println("Failed to delete file")
+		log.Println("ERROR: Failed to delete file")
 		return err
 	}
-	log.Println("File deleted successfully")
+	log.Println("INFO: File deleted successfully")
 	return nil
 }

@@ -1,4 +1,4 @@
-module sirrend/version-notifier
+module sirrend
 
 go 1.20
 

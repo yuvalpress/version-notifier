@@ -2,10 +2,11 @@ package slack_notifier
 
 import (
 	"fmt"
-	"github.com/slack-go/slack"
 	"log"
 	"os"
 	"sirrend/version-notifier/internal/release_notes"
+
+	"github.com/slack-go/slack"
 )
 
 var (
@@ -46,7 +47,7 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel, versionType string, se
 					slack.NewSectionBlock(slack.NewTextBlockObject("plain_text", notes, false, false), nil, nil)))
 
 			if err != nil {
-				fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
+				fmt.Printf(Red+"ERROR: Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
 				return
 			}
 		} else {
@@ -56,7 +57,7 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel, versionType string, se
 					slack.NewSectionBlock(slack.NewTextBlockObject("mrkdwn", "*New "+updateLevel+" update found for package: "+user+"/"+repo+"*"+"\n"+oldVer+" -> "+newVer, false, false), nil, nil)))
 
 			if err != nil {
-				fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
+				fmt.Printf(Red+"ERROR: Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
 				return
 			}
 		}
@@ -80,7 +81,7 @@ func Notify(user, repo, url, oldVer, newVer, updateLevel, versionType string, se
 				slack.MsgOptionUsername("Version Notifier"),
 			)
 			if err != nil {
-				fmt.Printf(Red+"Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
+				fmt.Printf(Red+"ERROR: Failed to post message to slack_notifier with the following error: %s\n"+Reset, err)
 				return
 			}
 		}

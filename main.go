@@ -4,8 +4,9 @@ package main
 import (
 	"log"
 	"os"
-	anc "sirrend/version-notifier/internal/anchor"
-	"sirrend/version-notifier/internal/utils"
+	anc "sirrend/internal/anchor"
+	smc "sirrend/internal/secrets_manager"
+	"sirrend/internal/utils"
 	"strings"
 )
 
@@ -18,7 +19,7 @@ var (
 	// Green color for logs
 	Green = "\033[32m"
 
-	// Red color for logs
+	// Red color for logsss
 	Red = "\033[31m"
 
 	LogLevel = os.Getenv("LOG_LEVEL")
@@ -27,19 +28,32 @@ var (
 // serviceInit initializes the version-notifier service and returns the update levels to notify the client about
 func serviceInit() []string {
 	// initialize application data until successful
-	log.Println("Starting application...")
+	log.Println("INFO: Starting application...")
 
-	log.Println("Initializing latest tags for configured repositories")
+	log.Println("INFO: Initializing latest tags for configured repositories")
 	anchor.Init()
 
 	levels := utils.LevelsToNotify()
-	log.Printf("Notifications will be sent for: %s\n", levels)
+	log.Printf("INFO: Notifications will be sent for: %s\n", levels)
 
 	if LogLevel == "" {
 		LogLevel = "INFO"
 	}
 
-	log.Printf("Log Level is set for: %s\n", LogLevel)
+	// Get all secrets from Secret Manager
+	log.Println("INFO: fetching secrets from AWS secret manager store.")
+	versionNotifierSecret, exists := os.LookupEnv("SECRET_NAME_TEST")
+	if !exists {
+		versionNotifierSecret = "SECRET"
+	}
+
+	err := smc.ImportSecretsToEnv(versionNotifierSecret)
+	if err != nil {
+		log.Println("ERROR: Failed to get essential secret from AWS secrets store such as GITHUB_TOKEN or SLACK_TOKEN.")
+		os.Exit(1)
+	}
+
+	log.Printf("INFO: Log Level is set for: %s\n", LogLevel)
 
 	if len(anchor.RepoList) != 0 {
 		log.Println("INFO: Core repository versions:")
@@ -111,7 +125,7 @@ func main() {
 
 			} else {
 				if LogLevel == "DEBUG" {
-					log.Printf("No new version found for package %v/%v", repoData.User, repoData.Repo)
+					log.Printf("DEBUG: No new version found for package %v/%v", repoData.User, repoData.Repo)
 				}
 			}
 		}

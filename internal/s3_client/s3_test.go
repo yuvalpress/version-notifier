@@ -1,7 +1,6 @@
 package s3_client
 
 import (
-	"log"
 	"os"
 	"testing"
 )
@@ -16,7 +15,7 @@ func TestS3FileUpload(t *testing.T) {
 	if err != nil {
 		t.Logf(err.Error())
 	}
-	log.Println("here")
+
 	err = svc.UpdateObject(fileInterface, fileName)
 	if err != nil {
 		t.Errorf(err.Error())
