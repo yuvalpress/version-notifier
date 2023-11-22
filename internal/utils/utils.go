@@ -4,9 +4,9 @@ import (
 	"log"
 	"os"
 	"regexp"
-	"sirrend/version-notifier/internal/scraper"
-	"sirrend/version-notifier/internal/slack_notifier"
-	"sirrend/version-notifier/internal/telegram_notifier"
+	"sirrend/internal/scraper"
+	"sirrend/internal/slack_notifier"
+	"sirrend/internal/telegram_notifier"
 	"strconv"
 	"strings"
 

@@ -2,7 +2,7 @@ package secrets_manager
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"os"
 
 	"sirrend/internal/commons"
@@ -18,6 +18,7 @@ func ImportSecretsToEnv(versionNotifierSecret string) error {
 		Region: aws.String(commons.REGION),
 	})
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -29,6 +30,7 @@ func ImportSecretsToEnv(versionNotifierSecret string) error {
 		SecretId: &versionNotifierSecret,
 	})
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -38,6 +40,7 @@ func ImportSecretsToEnv(versionNotifierSecret string) error {
 	// Parse JSON string to map
 	var secretMap map[string]string
 	if err := json.Unmarshal([]byte(secretData), &secretMap); err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -46,6 +49,6 @@ func ImportSecretsToEnv(versionNotifierSecret string) error {
 		os.Setenv(key, value)
 	}
 
-	fmt.Println("INFO: Secrets imported to environment variables successfully!")
+	log.Println("INFO: Secrets imported to environment variables successfully!")
 	return nil
 }

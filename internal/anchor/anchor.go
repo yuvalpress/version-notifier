@@ -3,8 +3,8 @@ package anchor
 import (
 	"log"
 	"os"
-	"sirrend/version-notifier/internal/config"
-	"sirrend/version-notifier/internal/utils"
+	"sirrend/internal/config"
+	"sirrend/internal/utils"
 	"strings"
 
 	jparser "github.com/Jeffail/gabs/v2"

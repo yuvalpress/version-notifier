@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"sirrend/version-notifier/internal/release_notes"
+	"sirrend/internal/release_notes"
 
 	"github.com/slack-go/slack"
 )
