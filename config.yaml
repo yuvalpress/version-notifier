@@ -1,4 +1,0 @@
-repos:
-  - hashicorp: 
-      name: terraform-provider-aws
-      current_flag: v5.0.0

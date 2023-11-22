@@ -83,40 +83,6 @@ Example:
 INTERVAL=30 -> 30 minutes
 ```
 
-### config.yaml
-The config.yaml file holds the repositories to be scraped by Version-Notifier.
-
-Example repo template: `<github-user>: <repository>`
-#### Edit with HELM:
-![values.yaml](./docs/repos-helm.png)
-
-#### Add to custom Dockerfile:
-1. Create a file called config.yaml, place it under the same folder as the Dockerfile and populate it like such:
-```yaml
-repos:
-    - confluentinc: terraform-provider-confluent
-    - hashicorp: terraform-provider-aws
-    - hashicorp: terraform-provider-google
-```
-2. Add it to your custom Dockerfile:
-  ```dockerfile
-    # Name this file Dockerfile
-    FROM sirrend/version-notifier:latest
-
-    # add custom config.yaml file
-    COPY config.yaml ./config.yaml
-    
-    # NOTE - Set only one method - slack or telegram - not both
-    # You MUST Set this environment variables for the application to send notification to slack
-    ENV NOTIFICATION_METHOD slack
-    ENV SLACK_CHANNEL {{ value }}
-    ENV SLACK_TOKEN {{ value }}
-    
-    # You MUST Set this environment variables for the application to send notification to telegram
-    ENV NOTIFICATION_METHOD telegram
-    ENV TELEGRAM_TOKEN {{ value }}
-    ENV TELEGRAM_CHAT_ID {{ value }}
-  ```
 ## Verification of Success 🎯
 If the deployment was successful, you'll see the logs rolling out of your container:
 ### Using Docker
