@@ -2,12 +2,13 @@ package scraper
 
 import (
 	"errors"
-	jparser "github.com/Jeffail/gabs/v2"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+
+	jparser "github.com/Jeffail/gabs/v2"
 )
 
 // GetURL build the needed GitHub urls with the received user and repo arguments
@@ -20,7 +21,7 @@ func GetURL(username, repoName string) (string, string) {
 func getRequest(url string) *http.Request {
 	token, exist := os.LookupEnv("GITHUB_TOKEN")
 	if !exist {
-		log.Panicln("The GITHUB_TOKEN environment variable must be set!")
+		log.Panicln("PANIC: The GITHUB_TOKEN environment variable must be set!")
 	}
 
 	req, _ := http.NewRequest("GET", url, nil)

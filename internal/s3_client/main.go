@@ -38,25 +38,27 @@ func (s *S3Client) Client() *s3.S3 {
 
 // Function to get an object from S3 bucket (stated in commons file)
 // Input : fileName (This is the exact path inside the S3), outfile (The name and location of the file to save on the fileSystem)
-func (c S3Client) getObject(fileName string, outputFile string) error {
+func (c S3Client) GetObject(fileName string) []byte {
+	log.Println("INFO: the file name to fetch from bucket is: " + fileName)
 	result, err := c.Client().GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(commons.NOTIFIER_BUCKET),
 		Key:    aws.String(fileName),
 	})
 	if err != nil {
-		return err
+		log.Println(err)
+		os.Exit(1)
 	}
-	outFile, err := os.Create(outputFile)
-	if err != nil {
-		return err
-	}
+	log.Println("INFO: successfully fetched the file from S3.")
 	defer result.Body.Close()
-	_, err = io.Copy(outFile, result.Body)
+
+	// Read the YAML data
+	yamlData, err := io.ReadAll(result.Body)
 	if err != nil {
-		return err
+		log.Println(err)
+		os.Exit(1)
 	}
 
-	return nil
+	return yamlData
 }
 
 // Function to upload an object to S3 bucket (stated in commons file)

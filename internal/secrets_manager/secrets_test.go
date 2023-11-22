@@ -7,9 +7,9 @@ import (
 )
 
 func TestSecretsManagerToVars(t *testing.T) {
-	versionNotifierSecret, exists := os.LookupEnv("SECRET_NAME_TEST")
+	versionNotifierSecret, exists := os.LookupEnv("SECRET_NAME_NOTIFIER")
 	if !exists {
-		log.Println("INFO: Could not file SECRET_NAME_TEST as env var.")
+		log.Println("INFO: Could not file SECRET_NAME_NOTIFIER as env var.")
 		os.Exit(1)
 	}
 

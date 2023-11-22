@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	anc "sirrend/internal/anchor"
+	"sirrend/internal/commons"
+	"sirrend/internal/s3_client"
 	smc "sirrend/internal/secrets_manager"
 	"sirrend/internal/utils"
 	"strings"
@@ -29,32 +31,41 @@ var (
 func serviceInit() []string {
 	// initialize application data until successful
 	log.Println("INFO: Starting application...")
-
 	log.Println("INFO: Initializing latest tags for configured repositories")
-	anchor.Init()
-
-	levels := utils.LevelsToNotify()
-	log.Printf("INFO: Notifications will be sent for: %s\n", levels)
-
-	if LogLevel == "" {
-		LogLevel = "INFO"
-	}
 
 	// Get all secrets from Secret Manager
 	log.Println("INFO: fetching secrets from AWS secret manager store.")
-	versionNotifierSecret, exists := os.LookupEnv("SECRET_NAME_TEST")
+	versionNotifierSecret, exists := os.LookupEnv("SECRET_NAME_NOTIFIER")
 	if !exists {
-		versionNotifierSecret = "SECRET"
+		log.Println("INFO: Could not file SECRET_NAME_NOTIFIER as env var.")
+		os.Exit(1)
 	}
-
 	err := smc.ImportSecretsToEnv(versionNotifierSecret)
 	if err != nil {
 		log.Println("ERROR: Failed to get essential secret from AWS secrets store such as GITHUB_TOKEN or SLACK_TOKEN.")
 		os.Exit(1)
 	}
 
+	// Get the config file from the S3 bucket
+	svc, err := s3_client.New()
+	if err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
+	yamlData := svc.GetObject(commons.NOTIFIER_BUCKET_PATH + commons.CONFIG_FILE_NAME)
+	anchor.Init(yamlData)
+
+	// Setup the notifications level for semver
+	levels := utils.LevelsToNotify()
+	log.Printf("INFO: Notifications will be sent for: %s\n", levels)
+
+	// Set Log Level
+	if LogLevel == "" {
+		LogLevel = "INFO"
+	}	
 	log.Printf("INFO: Log Level is set for: %s\n", LogLevel)
 
+	// Setup the Anchor Lists
 	if len(anchor.RepoList) != 0 {
 		log.Println("INFO: Core repository versions:")
 	}

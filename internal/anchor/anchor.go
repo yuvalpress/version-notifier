@@ -48,8 +48,8 @@ func (l *Latest) init(t, ownerName, name string, data *jparser.Container) {
 }
 
 // Init method for main Anchor object
-func (a *Anchor) Init() {
-	confData, err := config.ReadConfigFile()
+func (a *Anchor) Init(yamlData []byte) {
+	confData, err := config.ReadConfigFile(yamlData)
 	if err != nil {
 		log.Fatalf("Failed during initialization process with the following error: %v", err)
 	}

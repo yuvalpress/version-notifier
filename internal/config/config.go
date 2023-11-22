@@ -2,7 +2,6 @@ package config
 
 import (
 	"log"
-	"os"
 
 	"gopkg.in/yaml.v3"
 )
@@ -16,14 +15,10 @@ type Conf struct {
 }
 
 // ReadConfigFile reads the repositories to scrape from
-func ReadConfigFile() (Conf, error) {
+func ReadConfigFile(yamlData []byte) (Conf, error) {
 	var configData Conf
-	conf, err := os.ReadFile("config.yaml")
 
-	if err != nil {
-		return Conf{}, err
-	}
-	err = yaml.Unmarshal([]byte(conf), &configData)
+	err := yaml.Unmarshal([]byte(yamlData), &configData)
 
 	if err != nil {
 		return Conf{}, err
