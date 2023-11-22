@@ -48,7 +48,7 @@ func (l *Latest) init(t, ownerName, name string, data *jparser.Container) {
 }
 
 // Init method for main Anchor object
-func (a *Anchor) Init() bool {
+func (a *Anchor) Init() {
 	confData, err := config.ReadConfigFile()
 	if err != nil {
 		log.Fatalf("Failed during initialization process with the following error: %v", err)
@@ -62,12 +62,11 @@ func (a *Anchor) Init() bool {
 			data, requestType, err := utils.GetVersion(ownerName, project)
 			if err != nil {
 				log.Printf("Failed getting latest release of "+ownerName+"/"+project+" with the following error: "+Red+"%v"+Reset, err)
-				log.Println("Skipping..")
-				continue
+				os.Exit(1)
 			}
 
 			if requestType == "release" && data.Path("tag_name").String() == "" || requestType == "tag" && data.Path("name").String() == "" {
-				return false
+				os.Exit(1)
 			}
 
 			log.Println("Fetched latest asset of: " + ownerName + "/" + project)
@@ -77,6 +76,4 @@ func (a *Anchor) Init() bool {
 			a.RepoList = append(a.RepoList, latest)
 		}
 	}
-
-	return true
 }
