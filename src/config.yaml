@@ -1,5 +1,4 @@
 repos:
-  - sirrend: version-notifier
-  - hashicorp: terraform-provider-aws
-  - hashicorp: terraform-provider-google
-  - kubernetes: kubectl
+  - hashicorp: 
+      name: terraform-provider-aws
+      current_flag: v5.0.0

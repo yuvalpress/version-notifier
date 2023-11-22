@@ -1,9 +1,6 @@
 package utils
 
 import (
-	jparser "github.com/Jeffail/gabs/v2"
-	"github.com/Masterminds/semver/v3"
-	validate "golang.org/x/mod/semver"
 	"log"
 	"os"
 	"regexp"
@@ -12,7 +9,10 @@ import (
 	"sirrend/version-notifier/internal/telegram_notifier"
 	"strconv"
 	"strings"
-	"time"
+
+	jparser "github.com/Jeffail/gabs/v2"
+	"github.com/Masterminds/semver/v3"
+	validate "golang.org/x/mod/semver"
 )
 
 var (
@@ -101,28 +101,6 @@ func LevelsToNotify() []string {
 	}
 
 	return strings.Split(levels, ",")
-}
-
-// GetInterval returns the interval to use on run
-func GetInterval() (string, int) {
-	interval := os.Getenv("INTERVAL")
-	intInterval, err := strconv.Atoi(interval)
-	if err != nil {
-		log.Println(Red + "Wrong INTERVAL environment variable inserted, defaulting to 30 min" + Reset)
-		return "30", 30
-	}
-
-	return interval, intInterval
-}
-
-// WaitForInterval is responsible for waiting the interval requested by the user
-func WaitForInterval() {
-	strInterval, intInterval := GetInterval()
-	log.Println("Performing next request in: " + strInterval + " minutes.")
-
-	//wait <interval> minutes for next run
-	time.Sleep(time.Duration(intInterval) * time.Minute)
-	log.Println("Starting new run...")
 }
 
 // GetVersion is responsible to fetch the latest data from the relative url

@@ -1,12 +1,13 @@
 package anchor
 
 import (
-	jparser "github.com/Jeffail/gabs/v2"
 	"log"
 	"os"
 	"sirrend/version-notifier/internal/config"
 	"sirrend/version-notifier/internal/utils"
 	"strings"
+
+	jparser "github.com/Jeffail/gabs/v2"
 )
 
 var (
@@ -32,9 +33,9 @@ type Latest struct {
 	URL    string
 }
 
-func (l *Latest) init(t, username, repoName string, data *jparser.Container) {
-	l.User = username
-	l.Repo = repoName
+func (l *Latest) init(t, ownerName, name string, data *jparser.Container) {
+	l.User = ownerName
+	l.Repo = name
 
 	if t == "release" {
 		l.Latest = utils.GetLatestTag(data.Path("tag_name").String(), LogLevel)
@@ -53,11 +54,14 @@ func (a *Anchor) Init() bool {
 		log.Fatalf("Failed during initialization process with the following error: %v", err)
 	}
 
-	for _, info := range confData.Repos {
-		for username, repoName := range info {
-			data, requestType, err := utils.GetVersion(username, repoName)
+	for _, repo := range confData.Repos {
+		for ownerName, repoValues := range repo {
+			project := repoValues.Name
+			version := repoValues.CurrentFlag
+			log.Println("INFO: Iterating over the " + ownerName + "/" + project + ":" + version + " project")
+			data, requestType, err := utils.GetVersion(ownerName, project)
 			if err != nil {
-				log.Printf("Failed getting latest release of "+username+"/"+repoName+" with the following error: "+Red+"%v"+Reset, err)
+				log.Printf("Failed getting latest release of "+ownerName+"/"+project+" with the following error: "+Red+"%v"+Reset, err)
 				log.Println("Skipping..")
 				continue
 			}
@@ -66,10 +70,10 @@ func (a *Anchor) Init() bool {
 				return false
 			}
 
-			log.Println("Fetched latest asset of: " + username + "/" + repoName)
+			log.Println("Fetched latest asset of: " + ownerName + "/" + project)
 
 			latest := Latest{}
-			latest.init(requestType, username, repoName, data)
+			latest.init(requestType, ownerName, project, data)
 			a.RepoList = append(a.RepoList, latest)
 		}
 	}
