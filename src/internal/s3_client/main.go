@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"io"
 	"log"
 	"os"
 
@@ -51,6 +52,29 @@ func getAWSVariables() (string, error) {
 // Client returns the internal s3.S3 client.
 func (s *S3Client) Client() *s3.S3 {
 	return s.client
+}
+
+// Function to get an object from S3 bucket (stated in commons file)
+// Input : fileName (This is the exact path inside the S3), outfile (The name and location of the file to save on the fileSystem)
+func (c S3Client) getObject(fileName string, outputFile string) error {
+	result, err := c.Client().GetObject(&s3.GetObjectInput{
+		Bucket: aws.String(commons.NOTIFIER_BUCKET),
+		Key:    aws.String(fileName),
+	})
+	if err != nil {
+		return err
+	}
+	outFile, err := os.Create(outputFile)
+	if err != nil {
+		return err
+	}
+	defer result.Body.Close()
+	_, err = io.Copy(outFile, result.Body)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Function to upload an object to S3 bucket (stated in commons file)

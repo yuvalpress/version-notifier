@@ -16,4 +16,5 @@ var (
 	NOTIFIER_BUCKET      = getEnvOrDefault("NOTIFIER_BUCKET", "")
 	NOTIFIER_BUCKET_PATH = getEnvOrDefault("NOTIFIER_BUCKET", "version-notifier/")
 	REGION               = getEnvOrDefault("REGION", "eu-west-1")
+	CONFIG_FILE_NAME     = getEnvOrDefault("CONFIG_FILE_NAME", "config.yaml")
 )
