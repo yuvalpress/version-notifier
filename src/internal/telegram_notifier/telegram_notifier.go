@@ -4,9 +4,9 @@ import (
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 	"os"
+	"sirrend/version-notifier/internal/release_notes"
 	"strconv"
 	"strings"
-	"yuvalpress/version-notifier/internal/release_notes"
 )
 
 // getBot returns a telegram bot initialized with the token in context

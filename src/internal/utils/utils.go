@@ -7,12 +7,12 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"sirrend/version-notifier/internal/scraper"
+	"sirrend/version-notifier/internal/slack_notifier"
+	"sirrend/version-notifier/internal/telegram_notifier"
 	"strconv"
 	"strings"
 	"time"
-	"yuvalpress/version-notifier/internal/scraper"
-	"yuvalpress/version-notifier/internal/slack_notifier"
-	"yuvalpress/version-notifier/internal/telegram_notifier"
 )
 
 var (

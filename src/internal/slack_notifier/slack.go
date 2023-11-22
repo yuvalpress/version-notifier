@@ -5,7 +5,7 @@ import (
 	"github.com/slack-go/slack"
 	"log"
 	"os"
-	"yuvalpress/version-notifier/internal/release_notes"
+	"sirrend/version-notifier/internal/release_notes"
 )
 
 var (

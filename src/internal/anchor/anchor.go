@@ -4,9 +4,9 @@ import (
 	jparser "github.com/Jeffail/gabs/v2"
 	"log"
 	"os"
+	"sirrend/version-notifier/internal/config"
+	"sirrend/version-notifier/internal/utils"
 	"strings"
-	"yuvalpress/version-notifier/internal/config"
-	"yuvalpress/version-notifier/internal/utils"
 )
 
 var (

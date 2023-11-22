@@ -18,7 +18,7 @@ deployment:
         labels: {}
 
       image:
-        image: yuvalpress/version-notifier
+        image: sirrend/version-notifier
         # if tag not set, will default to the chart's appVersion
 #        tag: latest
         imagePullPolicy: IfNotPresent
@@ -60,6 +60,6 @@ secrets:
 # the repos to scrape
 configmap:
   repos:
-    - yuvalpress: version-notifier
+    - sirrend: version-notifier
     - hashicorp: terraform-provider-aws
     - hashicorp: terraform-provider-google

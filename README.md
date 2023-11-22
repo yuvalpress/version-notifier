@@ -1,5 +1,5 @@
-# Version Notifier [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=This+app+allows+you+to+stay+updated+about+GitHub+releases+you+choose%21+try+it+out+%3A%29&url=https://github.com/yuvalpress/version-notifier&via=devopschief&hashtags=golang,newversion,notification,devops,developers)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4704892fd733422bbb6dbec098c709be)](https://www.codacy.com/gh/yuvalpress/version-notifier/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=yuvalpress/version-notifier&amp;utm_campaign=Badge_Grade) [![Docker Build](https://github.com/yuvalpress/version-notifier/workflows/Docker%20Build/badge.svg)](https://github.com/yuvalpress/version-notifier/actions?query=workflow%3ADocker%20Build) [![Chart Release](https://github.com/yuvalpress/version-notifier/workflows/Chart%20Release/badge.svg)](https://github.com/yuvalpress/version-notifier/actions?query=workflow%3A%22Chart+Release%22) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)</br>
+# Version Notifier [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=This+app+allows+you+to+stay+updated+about+GitHub+releases+you+choose%21+try+it+out+%3A%29&url=https://github.com/sirrend/version-notifier&via=devopschief&hashtags=golang,newversion,notification,devops,developers)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4704892fd733422bbb6dbec098c709be)](https://www.codacy.com/gh/sirrend/version-notifier/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sirrend/version-notifier&amp;utm_campaign=Badge_Grade) [![Docker Build](https://github.com/sirrend/version-notifier/workflows/Docker%20Build/badge.svg)](https://github.com/sirrend/version-notifier/actions?query=workflow%3ADocker%20Build) [![Chart Release](https://github.com/sirrend/version-notifier/workflows/Chart%20Release/badge.svg)](https://github.com/sirrend/version-notifier/actions?query=workflow%3A%22Chart+Release%22) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)</br>
 🕷 **Version Notifier** - your Friendly Neighborhood Spiderman, only geekier 🤓
 
 Version Notifier is a modern solution for the "being notified" aspect of each Techy's day-to-day work.
@@ -23,7 +23,7 @@ You can deploy the application in one of two ways:</br>
 ### HELM
 Download the latest release and deploy it to your Kubernetes cluster </br>
   ```shell
-    helm repo add vnotifier https://yuvalpress.github.io/version-notifier
+    helm repo add vnotifier https://sirrend.github.io/version-notifier
     
     kubectl create ns notifier
     helm install version-notifier vnotifier/version-notifier -n notifier --set secret.values.SLACK_TOKEN="dmFsdWU=" --set secret.values.SLACK_CHANNEL="dmFsdWU="
@@ -33,7 +33,7 @@ Download the latest release and deploy it to your Kubernetes cluster </br>
 Create a dockerfile from the Version-Notifier base image and deploy it as a standalone container:
   ```dockerfile
     # Name this file Dockerfile
-    FROM yuvalpress/version-notifier:latest
+    FROM sirrend/version-notifier:latest
     
     # NOTE - Set only one method - slack or telegram - not both
     # You MUST Set this environment variables for the application to send notification to slack
@@ -101,7 +101,7 @@ repos:
 2. Add it to your custom Dockerfile:
   ```dockerfile
     # Name this file Dockerfile
-    FROM yuvalpress/version-notifier:latest
+    FROM sirrend/version-notifier:latest
 
     # add custom config.yaml file
     COPY config.yaml ./config.yaml

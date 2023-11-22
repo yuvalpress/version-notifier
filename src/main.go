@@ -4,10 +4,10 @@ package main
 import (
 	"log"
 	"os"
+	anc "sirrend/version-notifier/internal/anchor"
+	"sirrend/version-notifier/internal/utils"
 	"strings"
 	"time"
-	anc "yuvalpress/version-notifier/internal/anchor"
-	"yuvalpress/version-notifier/internal/utils"
 )
 
 var (
