@@ -10,6 +10,8 @@ import (
 	smc "sirrend/internal/secrets_manager"
 	"sirrend/internal/utils"
 	"strings"
+
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 var (
@@ -86,7 +88,7 @@ func serviceInit() []string {
 }
 
 // main - where the magic happens
-func main() {
+func HandleRequest() {
 	// initialize application
 	levels := serviceInit()
 
@@ -141,4 +143,8 @@ func main() {
 			}
 		}
 	}
+}
+
+func main() {
+	lambda.Start(HandleRequest)
 }
