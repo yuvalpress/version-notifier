@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/Jeffail/gabs/v2 v2.7.0
 	github.com/Masterminds/semver/v3 v3.2.1
+	github.com/aws/aws-lambda-go v1.41.0
 	github.com/aws/aws-sdk-go v1.48.3
 	github.com/go-rod/rod v0.114.5
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
