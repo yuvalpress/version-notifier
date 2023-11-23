@@ -98,7 +98,6 @@ func switchCurrentVersion(data []byte, owner string, project string, newVersion 
 	if err != nil {
 		return nil, err
 	}
-	log.Println(newConf)
 
 	//Iterate through the repos and update the currentVersion for the specified repoName
 	for _, repo := range newConf.Repos {

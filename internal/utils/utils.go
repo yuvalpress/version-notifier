@@ -6,7 +6,6 @@ import (
 	"regexp"
 	"sirrend/internal/scraper"
 	"sirrend/internal/slack_notifier"
-	"sirrend/internal/telegram_notifier"
 	"strconv"
 	"strings"
 
@@ -136,9 +135,6 @@ func Notify(user, repo, url, oldVer, newVer, versionType string) {
 
 	if method == "none" {
 		log.Panicln("The NOTIFICATION_METHOD environment variable must be set!")
-
-	} else if method == "telegram" {
-		telegram_notifier.Notify(user, repo, url, oldVer, newVer, GetUpdateLevel(oldVer, newVer), versionType, sendBool)
 
 	} else if method == "slack" {
 		slack_notifier.Notify(user, repo, url, oldVer, newVer, GetUpdateLevel(oldVer, newVer), versionType, sendBool)
