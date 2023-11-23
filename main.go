@@ -12,6 +12,7 @@ import (
 	"sirrend/internal/utils"
 	"strings"
 
+	"github.com/aws/aws-lambda-go/lambda"
 	"gopkg.in/yaml.v2"
 )
 
@@ -90,26 +91,26 @@ func serviceInit() []string {
 	return levels
 }
 
-func switchCurrentVersion(yamlData []byte, project, newVersion string) ([]byte, error) {
+func switchCurrentVersion(data []byte, owner string, project string, newVersion string) ([]byte, error) {
 	// Unmarshal YAML data into the struct
 	var newConf config.Conf
-	err := yaml.Unmarshal(yamlData, &newConf)
-	log.Println(newConf.Repos)
+	err := yaml.Unmarshal(data, &newConf)
 	if err != nil {
 		return nil, err
 	}
+	log.Println(newConf)
 
 	//Iterate through the repos and update the currentVersion for the specified repoName
-	for _, repoEntry := range newConf.Repos {
-		for _, item := range repoEntry {
-			if item.Name == project {
-				item.CurrentFlag = newVersion
-				log.Println("INFO: Switching in config file to new version - " + project + ":" + newVersion)
-				log.Print(item)
+	for _, repo := range newConf.Repos {
+		for key, value := range repo {
+			if key == owner && value.Name == project {
+				// Update the CurrentFlag field in the original struct
+				value.CurrentFlag = newVersion
+				// Update the map with the modified struct
+				repo[key] = value
 			}
 		}
 	}
-
 	// Marshal the struct back to YAML
 	newYamlData, err := yaml.Marshal(&newConf)
 
@@ -175,38 +176,38 @@ func HandleRequest() {
 					} else {
 						newURL = strings.ReplaceAll(latest.Path("zipball_url").String(), "\"", "")
 					}
-					newYamlData, err := switchCurrentVersion(yamlData, repoData.Project, newVersion)
-					log.Print(newYamlData)
+
+					//=============================================================//
+					//=============================================================//
+					newYamlData, err := switchCurrentVersion(yamlData, repoData.Owner, repoData.Project, newVersion)
 					if err != nil {
 						log.Println(err)
 						os.Exit(3)
 					}
-					//err = updateConfigFile(newYamlData)
+					err = updateConfigFile(newYamlData)
 					if err != nil {
 						log.Println(err)
 						os.Exit(3)
 					}
+					//=============================================================//
+					// Updating the URL
 					anchor.RepoList[index].URL = newURL
 
 					// notify slack_notifier channel
 					log.Println("INFO: Starting notifications services...")
 					utils.Notify(repoData.Owner, repoData.Project, anchor.RepoList[index].URL, repoData.Current, "v"+newVer, requestType)
-
 				}
 
 				// update latest version
 				anchor.RepoList[index].Current = "v" + newVer
 
 			} else {
-				if LogLevel == "DEBUG" {
-					log.Printf("DEBUG: No new version found for package %v/%v", repoData.Owner, repoData.Project)
-				}
+				log.Printf("INFO: No new version found for package %v/%v. Looks like already flagged to latest version: %v", repoData.Owner, repoData.Project, repoData.Current)
 			}
 		}
 	}
 }
 
 func main() {
-	HandleRequest()
-	//lambda.Start(HandleRequest)
+	lambda.Start(HandleRequest)
 }
