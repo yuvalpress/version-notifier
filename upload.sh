@@ -23,7 +23,7 @@ cp *.go $TMP_DIR/
 go get ./...
 
 # Build the Go binary inside the temporary directory
-GOOS=linux GOARCH=amd64 go build -tags lambda.norpc -o $TMP_DIR/bootstrap $TMP_DIR/main.go
+GOOS=linux GOARCH=arm64 go build -tags lambda.norpc -o $TMP_DIR/bootstrap $TMP_DIR/main.go
 
 # Change to the temporary directory
 cd $TMP_DIR
