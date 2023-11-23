@@ -4,10 +4,6 @@ import (
 	"log"
 	"os"
 	"sirrend/internal/config"
-	"sirrend/internal/utils"
-	"strings"
-
-	jparser "github.com/Jeffail/gabs/v2"
 )
 
 var (
@@ -22,36 +18,22 @@ var (
 
 // Anchor holds the first initialized information for the service
 type Anchor struct {
-	RepoList []Latest
+	RepoList []Current
 }
 
 // Latest holds all the needed information for a repo instance
-type Latest struct {
-	User   string
-	Repo   string
-	Latest string
-	URL    string
-}
-
-func (l *Latest) init(t, ownerName, name string, data *jparser.Container) {
-	l.User = ownerName
-	l.Repo = name
-
-	if t == "release" {
-		l.Latest = utils.GetLatestTag(data.Path("tag_name").String(), LogLevel)
-		l.URL = strings.ReplaceAll(data.Path("html_url").String(), "\"", "")
-	} else if t == "tag" {
-		l.Latest = utils.GetLatestTag(data.Path("name").String(), LogLevel)
-		l.URL = strings.ReplaceAll(data.Path("zipball_url").String(), "\"", "")
-	}
-
+type Current struct {
+	Owner   string
+	Project string
+	Current string
+	URL     string
 }
 
 // Init method for main Anchor object
 func (a *Anchor) Init(yamlData []byte) {
 	confData, err := config.ReadConfigFile(yamlData)
 	if err != nil {
-		log.Fatalf("Failed during initialization process with the following error: %v", err)
+		log.Fatalf("FATAL: Failed during initialization process with the following error: %v", err)
 	}
 
 	for _, repo := range confData.Repos {
@@ -59,20 +41,8 @@ func (a *Anchor) Init(yamlData []byte) {
 			project := repoValues.Name
 			version := repoValues.CurrentFlag
 			log.Println("INFO: Iterating over the " + ownerName + "/" + project + ":" + version + " project")
-			data, requestType, err := utils.GetVersion(ownerName, project)
-			if err != nil {
-				log.Printf("ERROR: Failed getting latest release of "+ownerName+"/"+project+" with the following error: "+Red+"%v"+Reset, err)
-				os.Exit(1)
-			}
-
-			if requestType == "release" && data.Path("tag_name").String() == "" || requestType == "tag" && data.Path("name").String() == "" {
-				os.Exit(1)
-			}
-
-			log.Println("INFO: Fetched latest asset of: " + ownerName + "/" + project)
-
-			latest := Latest{}
-			latest.init(requestType, ownerName, project, data)
+			latest := Current{ownerName, project, version, ""}
+			log.Printf("INFO: Current state for the project is: %s" , latest)
 			a.RepoList = append(a.RepoList, latest)
 		}
 	}

@@ -2,7 +2,6 @@ package s3_client
 
 import (
 	"bytes"
-	"encoding/json"
 	"io"
 	"log"
 	"os"
@@ -63,16 +62,10 @@ func (c S3Client) GetObject(fileName string) []byte {
 
 // Function to upload an object to S3 bucket (stated in commons file)
 // Input : file (as interface), fileName (This is the exact path inside the S3)
-func (c S3Client) UpdateObject(file interface{}, fileName string) error {
-	jsonBytes, err := json.Marshal(file)
-	if err != nil {
-		log.Println("ERROR: File failed to convert into a json")
-		return err
-	}
+func (c S3Client) UpdateObject(data []byte, fileName string) error {
+	fileToUpload := bytes.NewReader(data)
 
-	fileToUpload := bytes.NewReader(jsonBytes)
-
-	_, err = c.Client().PutObject(&s3.PutObjectInput{
+	_, err := c.Client().PutObject(&s3.PutObjectInput{
 		Bucket: aws.String(commons.NOTIFIER_BUCKET),
 		Key:    aws.String(fileName),
 		Body:   fileToUpload,

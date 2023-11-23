@@ -32,11 +32,11 @@ cd $TMP_DIR
 zip -r $ZIP_NAME .
 
 # Upload the ZIP archive to S3
-# aws s3 cp $ZIP_NAME s3://$S3_BUCKET/
+aws s3 cp $ZIP_NAME s3://$S3_BUCKET/
 
-# #Update the function lambda with the latest artifact
-# # aws lambda update-function-code --function-name $LAMBDA_NAME --s3-bucket $S3_BUCKET --s3-key $ZIP_NAME --profile $PROFILE --region $REGION > /dev/null
+# Update the function lambda with the latest artifact
+aws lambda update-function-code --function-name $LAMBDA_NAME --s3-bucket $S3_BUCKET --s3-key $ZIP_NAME --profile $PROFILE --region $REGION > /dev/null
 
-# # Clean up temporary files
-# cd -
-# rm -rf $TMP_DIR
+# Clean up temporary files
+cd -
+rm -rf $TMP_DIR

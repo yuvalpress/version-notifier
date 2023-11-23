@@ -70,6 +70,7 @@ func DoesNewTagExist(old, new string, repo string) (bool, string) {
 		newVer := semver.MustParse(new)
 
 		if oldVer.LessThan(newVer) {
+			log.Println("INFO: Found a new version: " + newVer.String())
 			return true, newVer.String()
 		}
 
